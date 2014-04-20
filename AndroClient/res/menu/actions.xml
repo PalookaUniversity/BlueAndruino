@@ -10,17 +10,12 @@
         app:showAsAction="ifRoom"
         android:title="Settings"/>
     
-    <item
-        android:id="@+id/voters"
-        android:orderInCategory="2"
-        app:showAsAction="ifRoom"
-        android:title="Voters"/>
     
     <item
-        android:id="@+id/elections"
+        android:id="@+id/scanner"
         android:orderInCategory="3"
         app:showAsAction="ifRoom"
-        android:title="Elections"/>
+        android:title="Scanner"/>
     
     <item
         android:id="@+id/debug"

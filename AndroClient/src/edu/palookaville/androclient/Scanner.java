@@ -17,7 +17,7 @@ import edu.palookaville.androclient.R;
  * @author gvamos
  *
  */
-public class ElectionsActivity extends Activity {
+public class Scanner extends Activity {
 	
 	  private ListView electionListView ;  
 	  private ArrayAdapter<String> listAdapter ; 	  
@@ -27,7 +27,7 @@ public class ElectionsActivity extends Activity {
 	  public void onCreate(Bundle savedInstanceState) {  
 	    super.onCreate(savedInstanceState); 
 	    Log.i(this.getClass().getName(),":onCreate");
-	    setContentView(R.layout.activity_elections); 
+	    setContentView(R.layout.activity_scanner); 
 	    	      
 	    elections = Config.getInstance().getElections();
 	    elections.updateElections();  

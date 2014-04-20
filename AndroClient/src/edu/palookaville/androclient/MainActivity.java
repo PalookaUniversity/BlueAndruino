@@ -46,12 +46,8 @@ public class MainActivity extends ActionBarActivity {
         switch (id) {
             case R.id.action_settings:
                 break;
-            case R.id.voters:
-            	System.out.println("DBG: Voters Activity");
-            	intent = new Intent(this, VotersActivity.class);
-              break;
-            case R.id.elections:
-            	intent = new Intent(this, ElectionsActivity.class);
+            case R.id.scanner:
+            	intent = new Intent(this, Scanner.class);
               break;
             case R.id.debug:
             	intent = new Intent(this, DebugActivity.class);

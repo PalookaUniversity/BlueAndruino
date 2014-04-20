@@ -24,7 +24,7 @@
         </activity>
         
         <activity
-            android:name="edu.palookaville.androclient.ElectionsActivity"
+            android:name="edu.palookaville.androclient.Scanner"
             android:label="Elections" >
         </activity>
         
