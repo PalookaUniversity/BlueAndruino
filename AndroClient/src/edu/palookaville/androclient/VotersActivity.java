@@ -1,4 +1,4 @@
-package com.cj.votron;
+package edu.palookaville.androclient;
 
 import android.app.Activity;
 import android.os.Bundle;

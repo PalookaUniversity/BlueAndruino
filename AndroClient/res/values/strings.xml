@@ -3,6 +3,7 @@
 
     <string name="app_name">Votron</string>
     <string name="hello_world">Hello world!</string>
+     <string name="android_arduino_bluetooth_communicator">Android to Arduino Bluetooth comminicator!</string>
     <string name="action_settings">Settings</string>
 
 </resources>

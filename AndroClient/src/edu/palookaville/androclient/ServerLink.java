@@ -1,4 +1,4 @@
-package com.cj.votron;
+package edu.palookaville.androclient;
 
 import java.io.IOException;
 import java.io.InputStream;
