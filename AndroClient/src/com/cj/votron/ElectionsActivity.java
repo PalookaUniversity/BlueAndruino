@@ -5,12 +5,12 @@ package com.cj.votron;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import edu.palookaville.androclient.R;
 
 /**
  * @author gvamos

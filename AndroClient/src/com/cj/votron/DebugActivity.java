@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.view.View;
 import android.view.View.OnClickListener;
+import edu.palookaville.androclient.R;
 
 public class DebugActivity extends Activity {
 
