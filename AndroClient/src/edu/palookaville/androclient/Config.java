@@ -2,8 +2,6 @@ package edu.palookaville.androclient;
 
 import java.util.ArrayList;
 
-import android.widget.ArrayAdapter;
-
 class Config {
 		
 	class Elections {

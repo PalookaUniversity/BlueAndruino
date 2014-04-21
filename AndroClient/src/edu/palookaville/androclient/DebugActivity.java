@@ -1,14 +1,11 @@
 package edu.palookaville.androclient;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.widget.Button;
-import android.widget.EditText;
 import android.view.View;
 import android.view.View.OnClickListener;
-import edu.palookaville.androclient.R;
+import android.widget.Button;
+import android.widget.EditText;
 
 public class DebugActivity extends Activity {
 
