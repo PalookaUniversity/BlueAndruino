@@ -7,6 +7,10 @@
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="19" />
+    
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    
 
     <application
         android:allowBackup="true"
@@ -25,7 +29,7 @@
         
         <activity
             android:name="edu.palookaville.androclient.Scanner"
-            android:label="Elections" >
+            android:label="Scanner" >
         </activity>
         
         <activity
@@ -33,10 +37,6 @@
             android:label="Voters" >
         </activity>
         
-                <activity
-            android:name="edu.palookaville.androclient.VotersActivity"
-            android:label="Voters" >
-        </activity>
         
         <activity
             android:name="edu.palookaville.androclient.DebugActivity"
