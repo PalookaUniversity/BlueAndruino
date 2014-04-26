@@ -29,7 +29,7 @@
  */
  
 #include <SoftwareSerial.h>
-SoftwareSerial mySerial(10, 11); // RX, TX
+SoftwareSerial mySerial(0, 1); // RX, TX
  
  
 char val; // variable to receive data from the serial port
@@ -74,7 +74,7 @@ void serialEvent() {
     inputString += inChar;
     // if the incoming character is a newline, set a flag
     // so the main loop can do something about it:
-    if (inChar == '\n') {
+    if (inChar == '\r') {
       stringComplete = true;
     } 
   }
