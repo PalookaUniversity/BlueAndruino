@@ -1,0 +1,62 @@
+/* Pro Micro Test Code
+   by: Nathan Seidle
+   modified by: Jim Lindblom
+   SparkFun Electronics
+   date: September 16, 2013
+   license: Public Domain - please use this code however you'd like.
+   It's provided as a learning tool.
+
+   This code is provided to show how to control the SparkFun
+   ProMicro's TX and RX LEDs within a sketch. It also serves
+   to explain the difference between Serial.print() and
+   Serial1.print().
+*/
+
+int led = 13;
+
+int RXLED = 13;//17;  // The RX LED has a defined Arduino pin
+
+int SLOW = 2000;
+int NORMAL=1000;
+int FAST = 100;
+
+int delay_time = NORMAL;
+// The TX LED was not so lucky, we'll need to use pre-defined
+// macros (TXLED1, TXLED0) to control that.
+// (We could use the same macros for the RX LED too -- RXLED1,
+//  and RXLED0.)
+
+void setup()
+{
+ pinMode(RXLED, OUTPUT);  // Set RX LED as an output
+ // TX LED is set as an output behind the scenes
+
+ Serial.begin(9600); //This pipes to the serial monitor
+ Serial1.begin(9600); //This is the UART, pipes to sensors attached to board
+}
+int linecount = 0;
+void loop()
+{
+  if(Serial1.available()) {
+    char next = Serial1.read();
+    Serial1.print("Received: ");
+    Serial1.println(next);
+    if(next == '2') {
+      delay_time = NORMAL;
+    }
+    if(next == '1') {
+      delay_time = SLOW;
+    }
+    if(next == '3') {
+      delay_time = FAST;
+    }
+  }
+  
+   digitalWrite(RXLED, LOW);   // set the LED on
+   //TXLED0; //TX LED is not tied to a normally controlled pin
+   delay(delay_time);              // wait for a second
+ digitalWrite(RXLED, HIGH);    // set the LED off
+ //TXLED1;
+ delay(delay_time);              // wait for a second
+
+}
