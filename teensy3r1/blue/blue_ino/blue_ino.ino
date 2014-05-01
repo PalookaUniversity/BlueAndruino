@@ -35,28 +35,44 @@ void setup()
  Serial1.begin(9600); //This is the UART, pipes to sensors attached to board
 }
 int linecount = 0;
+int cycle = 0;
+char btIn = '4';
 void loop()
 {
+  
+    Serial.print(cycle++);
+    Serial.print(": tick delayTime=");
+    Serial.println(delay_time);
+  
   if(Serial1.available()) {
-    char next = Serial1.read();
-    Serial1.print("Received: ");
-    Serial1.println(next);
-    if(next == '2') {
-      delay_time = NORMAL;
-    }
-    if(next == '1') {
-      delay_time = SLOW;
-    }
-    if(next == '3') {
-      delay_time = FAST;
+    linecount++;
+    char btIn = Serial1.read();
+    Serial1.flush();
+    Serial1.println("");
+    Serial1.print(linecount);
+    Serial1.print(" Received: ");
+    Serial1.println(btIn);
+    
+    switch(btIn){
+      case '1': 
+        delay_time = SLOW; 
+        break;
+      case '2': 
+        delay_time = NORMAL; 
+        break;
+      case '3': 
+        delay_time = FAST; 
+        break;
+      case '4': 
+        delay_time = 30; 
+        break;
     }
   }
   
-   digitalWrite(RXLED, LOW);   // set the LED on
-   //TXLED0; //TX LED is not tied to a normally controlled pin
-   delay(delay_time);              // wait for a second
- digitalWrite(RXLED, HIGH);    // set the LED off
+  digitalWrite(RXLED, LOW);   // set the LED on
+  //TXLED0; //TX LED is not tied to a normally controlled pin
+  delay(delay_time);              // wait for a second
+  digitalWrite(RXLED, HIGH);    // set the LED off
  //TXLED1;
- delay(delay_time);              // wait for a second
-
+  delay(delay_time);              // wait for a second
 }
