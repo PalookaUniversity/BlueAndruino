@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">latency</string>
+    <string name="Connect">Pair</string>
+    <string name="noConnection">No Connection</string>
+    <string name="noBtOnDevice">No bluetooth on device</string>
+    <string name="btDisabled">Please enable Bluetooth</string>
+    <string name="pairFirst">Pair with your device first</string>
+    <string name="stop">Stop</string>
+    <string name="millisReport">%1$s millis</string>
+    <string name="disconnected">(Disconnected)</string>
+</resources>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+    <Button
+            android:id="@+id/stop"
+            android:textSize="60sp"
+            android:text="@string/stop"
+            android:onClick="onStopClick"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    <Button
+            android:layout_above="@id/stop"
+            android:id="@+id/pair"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/Connect"
+            android:textSize="60sp"
+            android:onClick="onPairClick"/>
+    <TextView
+            android:id="@+id/strength"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:text="@string/noConnection"
+            android:textSize="50sp"
+            android:autoText="false"
+            android:gravity="center"
+            android:layout_above="@id/pair"
+            />
+
+</RelativeLayout>
+
