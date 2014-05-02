@@ -20,7 +20,6 @@ import java.util.Set;
 import java.util.UUID;
 
 public class LatencyActivity extends Activity {
-    private static final int DEVICE_CHOOSER_RESULT_CODE = 1904152098;
     private static final UUID SECURE_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     private TextView mTextViewStrength;
     private BluetoothDevice toConnect;
