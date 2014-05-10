@@ -28,19 +28,19 @@
         android:textSize="20sp" />
     
     <Button
-        android:id="@+id/test3"
+        android:id="@+id/runLink"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/pair"
-        android:onClick="onClickTestLatency"
-        android:text="Test Latency"
+        android:onClick="onRunLinkClick"
+        android:text="Run Link"
         android:textSize="20sp" />
     
      <Button
         android:id="@+id/status"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/test3"
+        android:layout_above="@id/runLink"
         android:onClick="onStatusClick"
         android:text="Check Status"
         android:textSize="20sp" />
@@ -73,32 +73,31 @@
         android:textSize="20sp" />
         
      <Button
-        android:id="@+id/runlink"
+        android:id="@+id/test1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/send1"
         android:onClick="onRunLinkClick"
-        android:text="Run Link"
+        android:text="Test 1"
         android:textSize="20sp" />
 
     <TextView
-        android:id="@+id/strength"
+        android:id="@+id/statusView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/runlink"
+        android:layout_above="@id/test1"
         android:autoText="false"
         android:gravity="center"
-        android:text="noConnection"
+        android:text="init"
         android:textSize="20sp" />
 
     <TextView
-        android:id="@+id/output"
+        android:id="@+id/outputView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/strength"
+        android:layout_above="@id/statusView"
         android:autoText="false"
         android:gravity="center"
-        android:text="empty"
         android:textSize="20sp" />
 
 </RelativeLayout>

@@ -32,14 +32,11 @@ public class MainActivity extends Activity {
     
     TextView textViewStatus;
     TextView textViewDisplay;
-//    private BluetoothDevice toConnect;
-//    private BluetoothAdapter bluetoothAdapter;
     private byte[] latencyData = "measure latency for this message".getBytes();
     byte[] readData = new byte[latencyData.length];
     private BluetoothSocket socket;
     Link link;
     
-
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -62,10 +59,10 @@ public class MainActivity extends Activity {
 	}
 	
 	void init(){
-		textViewStatus = (TextView) findViewById(R.id.strength);
-		textViewDisplay = (TextView) findViewById(R.id.output);
+		textViewStatus = (TextView) findViewById(R.id.statusView);
+		textViewDisplay = (TextView) findViewById(R.id.outputView);
 
-		Toast.makeText(getApplicationContext(), "init()", Toast.LENGTH_SHORT).show();		
+		//Toast.makeText(getApplicationContext(), "init()", Toast.LENGTH_SHORT).show();		
 	}
 	
 	
@@ -107,12 +104,9 @@ public class MainActivity extends Activity {
 		}
 	}
 	
-
-	
 	/***********************************************
 	 * 
-	 * 
-	 * 
+	 * Control logic
 	 * 
 	 ************************************************/
 	
@@ -125,13 +119,11 @@ public class MainActivity extends Activity {
     public void onSend1Click(View v) {
 		Toast.makeText(getApplicationContext(), "onSend1Click", Toast.LENGTH_LONG).show();
 		link.postMessageout("1");
-		//link.writeImmediate("3");
     }
     
     public void onSend2Click(View v) {
 		Toast.makeText(getApplicationContext(), "onSend2Click", Toast.LENGTH_LONG).show();
 		link.postMessageout("2");
-		//link.writeImmediate("1");
     }
 	
     public void onSend3Click(View v) {
@@ -141,7 +133,6 @@ public class MainActivity extends Activity {
 	
     public void onStatusClick(View v) {
     	textViewStatus.setText("Status Display");
-		//Toast.makeText(getApplicationContext(), "onStatusClick", Toast.LENGTH_LONG).show();
     }
 	
 	
@@ -156,13 +147,7 @@ public class MainActivity extends Activity {
         showChooserAndConnect(deviceList);
     }
     
-    public void onClickTestLatency(View v){
-        if (link.getToConnect() != null) {
-            runLatencyTest();
-        } else {
-        	Toast.makeText(getApplicationContext(), "No Connection", Toast.LENGTH_LONG).show();
-        }
-    }
+
 
     private void showChooserAndConnect(final ArrayList<BluetoothDevice> deviceList) {
         ArrayList<CharSequence> itemList = new ArrayList<CharSequence>();
@@ -236,96 +221,9 @@ public class MainActivity extends Activity {
         });
     }
 
-    
-    private void runLatencyTest() {
-    	Toast.makeText(getApplicationContext(), "latency test clicked", Toast.LENGTH_LONG).show();
-    /*
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                link.getBluetoothAdapter().cancelDiscovery();
-                try {
-
-                    socket = link.getBluetoothSocket();
-                    socket.connect();
-                    while (socket.isConnected()) {
-
-                        long nanoStart = System.nanoTime();
-                        byte[] dataToSend = latencyData;
-                        socket.getOutputStream().write(dataToSend);
-
-                        int totalReceivedBytes = 0;
-                        while(totalReceivedBytes < dataToSend.length) {
-                            int numRead = socket.getInputStream().read(readData);
-                            debug("read " + numRead + " bytes");
-                            totalReceivedBytes += numRead;
-                        }
-
-                        report(System.nanoTime() - nanoStart);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    if (socket != null) {
-                        try {
-                            socket.getInputStream().close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            socket.getOutputStream().close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            socket.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mTextViewStrength.append(" " + getString(R.string.disconnected));
-                    }
-                });
-            }
-        }).start();
-        */
-    }
-    
 
     void debug(String msg) {
         Log.d(this.getClass().getName(), msg);
-    }
-
-    void report(final long nanos) {
-        addToWindow(nanos);
-
-        final BigDecimal millisBigDecimal = new BigDecimal(averageOfWindow() / 1000000.0).setScale(2, RoundingMode.HALF_EVEN);
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                textViewStatus.setText(getResources().getString(R.string.millisReport, millisBigDecimal.toString()));
-            }
-        });
-    }
-
-    long[] window = new long[50];
-    int windowMarker = 0;
-
-    private double averageOfWindow() {
-        long sumL = 0;
-        for (long l : window) {
-            sumL += l;
-        }
-        return (double) sumL / window.length;
-    }
-
-    private void addToWindow(long nanos) {
-        window[windowMarker++] = nanos;
-        windowMarker = windowMarker % window.length;
     }
 
     public void alarm(final int resourceId) {
@@ -336,5 +234,4 @@ public class MainActivity extends Activity {
             }
         });
     }	
-
 }
