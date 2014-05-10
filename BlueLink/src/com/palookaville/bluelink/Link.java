@@ -142,7 +142,8 @@ public class Link  {
 
 				while (socket.isConnected()) {
 					String msg = r.readLine();
-					inQueue.add(msg);
+					//inQueue.add(msg);
+					activity.display(msg);
 					System.out.println(ct.toString() + " Message in:"+msg);
 				}			
 			} catch (IOException e){

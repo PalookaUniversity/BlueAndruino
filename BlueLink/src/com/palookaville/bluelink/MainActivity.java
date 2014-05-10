@@ -30,7 +30,8 @@ public class MainActivity extends Activity {
     private static final UUID SECURE_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     
     
-    TextView mTextViewStrength;
+    TextView textViewStatus;
+    TextView textViewDisplay;
 //    private BluetoothDevice toConnect;
 //    private BluetoothAdapter bluetoothAdapter;
     private byte[] latencyData = "measure latency for this message".getBytes();
@@ -51,9 +52,23 @@ public class MainActivity extends Activity {
 		}
 		link = AppManager.instance.link;
 		link.setActivity(this);
-		mTextViewStrength = (TextView) findViewById(R.id.strength);
-		Toast.makeText(getApplicationContext(), "onCreate", Toast.LENGTH_LONG).show();
+		
 	}
+	
+	@Override
+	public void onStart(){
+	    super.onStart();
+	    init();   
+	}
+	
+	void init(){
+		textViewStatus = (TextView) findViewById(R.id.strength);
+		textViewDisplay = (TextView) findViewById(R.id.output);
+
+		Toast.makeText(getApplicationContext(), "init()", Toast.LENGTH_SHORT).show();		
+	}
+	
+	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -92,6 +107,8 @@ public class MainActivity extends Activity {
 		}
 	}
 	
+
+	
 	/***********************************************
 	 * 
 	 * 
@@ -123,7 +140,8 @@ public class MainActivity extends Activity {
     }
 	
     public void onStatusClick(View v) {
-		Toast.makeText(getApplicationContext(), "onStatusClick", Toast.LENGTH_LONG).show();
+    	textViewStatus.setText("Status Display");
+		//Toast.makeText(getApplicationContext(), "onStatusClick", Toast.LENGTH_LONG).show();
     }
 	
 	
@@ -207,6 +225,16 @@ public class MainActivity extends Activity {
             socket.close();
         }
     }
+    
+    public void display(final String msg){
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                textViewDisplay.append(msg + "\n");
+            }
+        });
+    }
 
     
     private void runLatencyTest() {
@@ -279,7 +307,7 @@ public class MainActivity extends Activity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mTextViewStrength.setText(getResources().getString(R.string.millisReport, millisBigDecimal.toString()));
+                textViewStatus.setText(getResources().getString(R.string.millisReport, millisBigDecimal.toString()));
             }
         });
     }
