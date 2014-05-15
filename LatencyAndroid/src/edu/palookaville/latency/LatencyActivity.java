@@ -5,7 +5,11 @@ import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -24,9 +28,15 @@ public class LatencyActivity extends Activity {
     private TextView mTextViewStrength;
     private BluetoothDevice toConnect;
     private BluetoothAdapter bluetoothAdapter;
-    private byte[] latencyData = "measure latency for this message".getBytes();
+    private byte[] latencyData =
+            ("" +
+                    "measure l" +
+                    "atency fo" +
+                    "r this me" +
+                    "ssage").getBytes();
     private byte[] readData = new byte[latencyData.length];
     private BluetoothSocket socket;
+    private BroadcastReceiver receiver;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,10 +51,55 @@ public class LatencyActivity extends Activity {
         if (deviceList == null) {
             return;
         }
-        showChooserAndConnect(deviceList);
+        showChooserForOperation(deviceList, connect());
     }
 
-    private void showChooserAndConnect(final ArrayList<BluetoothDevice> deviceList) {
+    public void onScanClick(View v) {
+        ArrayList<BluetoothDevice> deviceList = getBluetoothDevices();
+        showChooserForOperation(deviceList, scanForStrength());
+    }
+
+    private Runnable scanForStrength() {
+        return new Runnable() {
+            @Override
+            public void run() {
+                final Runnable repeat = new Runnable() {
+                    @Override
+                    public void run() {
+                        bluetoothAdapter.cancelDiscovery();
+                        try {
+                            Thread.sleep(5000l);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        bluetoothAdapter.startDiscovery();
+                    }
+                };
+
+                receiver = new BroadcastReceiver() {
+                    @Override
+                    public void onReceive(Context context, Intent intent) {
+                        Bundle extras = intent.getExtras();
+                        BluetoothDevice device = (BluetoothDevice) extras.get(BluetoothDevice.EXTRA_DEVICE);
+                        String address = toConnect.getAddress();
+                        if (device.getAddress().equals(address)) {
+                            if (BluetoothDevice.ACTION_FOUND.equals(intent.getAction())) {
+
+                                reportStrength(extras.get(BluetoothDevice.EXTRA_RSSI));
+                                repeat.run();
+                            }
+                        }
+                    }
+                };
+                registerReceiver(receiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
+
+
+                bluetoothAdapter.startDiscovery();
+            }
+        };
+    }
+
+    private void showChooserForOperation(final ArrayList<BluetoothDevice> deviceList, final Runnable forOperation) {
         ArrayList<CharSequence> itemList = new ArrayList<CharSequence>();
         for (BluetoothDevice device : deviceList) {
             itemList.add(device.getName() + " [" + device.getAddress() + "]");
@@ -61,15 +116,15 @@ public class LatencyActivity extends Activity {
                     }
                 })
                 .create();
-        dialog.show();
         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
                 if (toConnect != null) {
-                    connect();
+                    new Thread(forOperation).start();
                 }
             }
         });
+        dialog.show();
     }
 
     private ArrayList<BluetoothDevice> getBluetoothDevices() {
@@ -101,10 +156,19 @@ public class LatencyActivity extends Activity {
         if (socket != null) {
             socket.close();
         }
+        if (bluetoothAdapter != null) {
+            bluetoothAdapter.cancelDiscovery();
+        }
+        if (receiver != null) {
+            unregisterReceiver(receiver);
+        }
+
+        socket = null;
+        bluetoothAdapter = null;
     }
 
-    private void connect() {
-        new Thread(new Runnable() {
+    private Runnable connect() {
+        Runnable connector = new Runnable() {
             @Override
             public void run() {
                 bluetoothAdapter.cancelDiscovery();
@@ -118,13 +182,14 @@ public class LatencyActivity extends Activity {
                         socket.getOutputStream().write(dataToSend);
 
                         int totalReceivedBytes = 0;
-                        while(totalReceivedBytes < dataToSend.length) {
+                        while (totalReceivedBytes < dataToSend.length) {
                             int numRead = socket.getInputStream().read(readData);
                             debug("read " + numRead + " bytes");
                             totalReceivedBytes += numRead;
                         }
 
                         report(System.nanoTime() - nanoStart);
+
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -154,7 +219,8 @@ public class LatencyActivity extends Activity {
                     }
                 });
             }
-        }).start();
+        };
+        return connector;
     }
 
     private void debug(String msg) {
@@ -165,10 +231,22 @@ public class LatencyActivity extends Activity {
         addToWindow(nanos);
 
         final BigDecimal millisBigDecimal = new BigDecimal(averageOfWindow() / 1000000.0).setScale(2, RoundingMode.HALF_EVEN);
+        final BigDecimal millisPerByte = millisBigDecimal.setScale(10).divide(BigDecimal.valueOf(latencyData.length)).setScale(4, RoundingMode.HALF_EVEN);
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mTextViewStrength.setText(getResources().getString(R.string.millisReport, millisBigDecimal.toString()));
+                mTextViewStrength.setText(
+                        getResources().getString(R.string.millisReport, millisBigDecimal.toString(), millisPerByte.toString()));
+            }
+        });
+    }
+
+    private void reportStrength(final Object rssi) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mTextViewStrength.setText(
+                        getResources().getString(R.string.rssiReport, rssi.toString()));
             }
         });
     }
@@ -178,10 +256,14 @@ public class LatencyActivity extends Activity {
 
     private double averageOfWindow() {
         long sumL = 0;
+        int count = 0;
         for (long l : window) {
-            sumL += l;
+            if (l > 0) {
+                sumL += l;
+                count++;
+            }
         }
-        return (double) sumL / window.length;
+        return (double) sumL / count;
     }
 
     private void addToWindow(long nanos) {

@@ -6,7 +6,7 @@
 
     <Button
             android:id="@+id/stop"
-            android:textSize="60sp"
+            android:textSize="40sp"
             android:text="@string/stop"
             android:onClick="onStopClick"
             android:layout_alignParentBottom="true"
@@ -14,23 +14,32 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
+
     <Button
-            android:layout_above="@id/stop"
             android:id="@+id/pair"
+            android:layout_above="@id/stop"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="@string/Connect"
-            android:textSize="60sp"
+            android:textSize="40sp"
             android:onClick="onPairClick"/>
+    <Button
+            android:id="@+id/scan"
+            android:layout_above="@id/pair"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/Scan"
+            android:textSize="40sp"
+            android:onClick="onScanClick"/>
     <TextView
             android:id="@+id/strength"
+            android:layout_above="@id/scan"
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
             android:text="@string/noConnection"
             android:textSize="50sp"
             android:autoText="false"
             android:gravity="center"
-            android:layout_above="@id/pair"
             />
 
 </RelativeLayout>

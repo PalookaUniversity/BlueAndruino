@@ -7,6 +7,8 @@
     <string name="btDisabled">Please enable Bluetooth</string>
     <string name="pairFirst">Pair with your device first</string>
     <string name="stop">Stop</string>
-    <string name="millisReport">%1$s millis</string>
+    <string name="millisReport">%1$s millis\n%2$s per byte</string>
     <string name="disconnected">(Disconnected)</string>
+    <string name="Scan">Scan</string>
+    <string name="rssiReport">Signal Strength: %1$s</string>
 </resources>
