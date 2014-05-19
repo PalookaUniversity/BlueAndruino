@@ -1,0 +1,41 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.palookaville.bluelink.MainActivity" >
+
+    <item
+        android:id="@+id/action_clear"
+        android:orderInCategory="100"
+        android:showAsAction="ifRoom"
+        android:title="Clear"/>
+    <item
+        android:id="@+id/action_pair"
+        android:orderInCategory="110"
+        android:showAsAction="ifRoom"
+        android:title="pair"/>
+    <item
+        android:id="@+id/action_link"
+        android:orderInCategory="120"
+        android:showAsAction="ifRoom"
+        android:title="Link"/>
+    <item
+        android:id="@+id/action_status"
+        android:orderInCategory="130"
+        android:showAsAction="ifRoom"
+        android:title="Status"/>
+    <item
+        android:id="@+id/action_quit"
+        android:orderInCategory="140"
+        android:showAsAction="ifRoom"
+        android:title="Quit"/>
+    <item
+        android:id="@+id/action_blink_mode"
+        android:orderInCategory="150"
+        android:showAsAction="never"
+        android:title="Blink mode"/>
+    <item
+        android:id="@+id/action_c2"
+        android:orderInCategory="160"
+        android:showAsAction="never"
+        android:title="C2 mode"/>
+
+</menu>

@@ -32,6 +32,7 @@ public class MainActivity extends Activity {
     
     TextView textViewStatus;
     TextView textViewDisplay;
+    ActionBar actionBar;
     private byte[] latencyData = "measure latency for this message".getBytes();
     byte[] readData = new byte[latencyData.length];
     private BluetoothSocket socket;
@@ -61,7 +62,7 @@ public class MainActivity extends Activity {
 	void init(){
 		textViewStatus = (TextView) findViewById(R.id.statusView);
 		textViewDisplay = (TextView) findViewById(R.id.outputView);
-
+		
 		//Toast.makeText(getApplicationContext(), "init()", Toast.LENGTH_SHORT).show();		
 	}
 	
@@ -72,7 +73,10 @@ public class MainActivity extends Activity {
 
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
+//		actionBar = getActionBar();
+//		actionBar.show();
+		Toast.makeText(getApplicationContext(), "action bar init()", Toast.LENGTH_SHORT).show();
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
@@ -132,6 +136,11 @@ public class MainActivity extends Activity {
     }
 	
     public void onStatusClick(View v) {
+//    	actionBar = this.getActionBar();
+//    	String foo = actionBar == null ? "missing" : "present";
+//    	Toast.makeText(getApplicationContext(), "onStatusClick()"+foo, Toast.LENGTH_SHORT).show();
+
+    	//actionBar.show();
     	textViewStatus.setText("Status Display");
     }
 	
