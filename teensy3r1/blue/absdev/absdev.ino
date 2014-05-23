@@ -28,7 +28,7 @@ void setup()
 int linecount = 0;
 int cycle = 0;
 
-unsigned char cmdBuff[200];
+/* unsigned */ char cmdBuff[200];
 
 int cmdPtr = 0;
 
@@ -127,7 +127,7 @@ void exec(){
     if (cmdPtr > 2){
       char key = cmdBuff[0];
       char delim = cmdBuff[1];
-      strcpy(argstr, "42");
+      strcpy(argstr, cmdBuff+2);
       val = atoi(argstr);
       Serial1.print(key);
       Serial1.print("=");
