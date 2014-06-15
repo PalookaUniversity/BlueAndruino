@@ -13,8 +13,7 @@ var http=require('http'),
      },
     files = fs.readdirSync(context.dRoot + context.scripts);
 
-app.configure(function(){
-});
+//app.configure(function(){});
 
 app.get('/scripts/:doc', function(req, res){
   var foo = fs.readFileSync(context.dRoot + context.scripts + '/' + req.params.doc);
