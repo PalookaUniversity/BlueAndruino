@@ -20,13 +20,13 @@ public class Link  {
 
 
 	BluetoothSocket socket;
-	private MainActivity activity;
+	private ExecActivity activity;
 
 	public Activity getActivity() {
 		return activity;
 	}
 
-	public void setActivity(MainActivity activity) { this.activity = activity; }
+	public void setActivity(ExecActivity activity) { this.activity = activity; }
 
 	public BluetoothDevice getToConnect() { return toConnect; }
 
@@ -59,7 +59,7 @@ public class Link  {
 		BlockingQueue<String> outQueue = new ArrayBlockingQueue<String>(10);   	
 	}
 	
-	public void activate(MainActivity activity){
+	public void activate(ExecActivity activity){
 		this.activity = activity;
 		try {
 			if (socket != null) {
@@ -75,7 +75,7 @@ public class Link  {
 		reader.start();
 		System.out.println("Reader and writer started.");
 		
-		final MainActivity callingActivity = activity;
+		final ExecActivity callingActivity = activity;
 		
 		//activity.runOnUiThread(new Runnable() {
 		//@Override

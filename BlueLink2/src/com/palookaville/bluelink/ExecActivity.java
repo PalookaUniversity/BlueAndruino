@@ -40,7 +40,7 @@ import android.widget.Toast;
  *
  */
 
-public class MainActivity extends Activity {
+public class ExecActivity extends Activity {
 	
     private static final UUID SECURE_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
       
@@ -112,8 +112,10 @@ public class MainActivity extends Activity {
         case R.id.action_clear: 
     		textViewDisplay.setText(""); 
         	break;
-        case R.id.action_blink_mode:
-        	AppManager.instance.setMode("Blink");
+        case R.id.action_config:
+        	AppManager.instance.setMode("Config");
+        	Toast.makeText(getApplicationContext(), "Config mode", Toast.LENGTH_SHORT).show();
+
         	break;
         case R.id.action_c2:
         	AppManager.instance.setMode("C2");
@@ -284,7 +286,7 @@ public class MainActivity extends Activity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(MainActivity.this, string, Toast.LENGTH_LONG).show();
+                Toast.makeText(ExecActivity.this, string, Toast.LENGTH_LONG).show();
             }
         });
     }	
