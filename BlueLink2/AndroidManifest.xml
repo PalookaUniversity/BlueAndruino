@@ -26,10 +26,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.palookaville.bluelink.DebugActivity"
-            android:label="Debug" >
-        </activity>
-        <activity
             android:name="com.palookaville.bluelink.ConfigActivity"
             android:label="Debug" >
         </activity>

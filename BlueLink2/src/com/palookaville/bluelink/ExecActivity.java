@@ -67,7 +67,9 @@ public class ExecActivity extends Activity {
                     .commit();
         }
         
-		btLink = Manager.instance.link;
+        Config.getInstance().init(this);
+        
+		btLink = Config.instance.link;
 		btLink.setActivity(this);
     }
     
@@ -116,13 +118,13 @@ public class ExecActivity extends Activity {
     		textViewDisplay.setText(""); 
         	break;
         case R.id.action_config:
-        	Manager.instance.setMode("Config");
+        	Config.instance.setMode("Config");
         	Toast.makeText(getApplicationContext(), "Config mode", Toast.LENGTH_SHORT).show();
-        	Intent configIntent = new Intent(ExecActivity.this,DebugActivity.class);
+        	Intent configIntent = new Intent(ExecActivity.this,ConfigActivity.class);
         	startActivity(configIntent);
         	break;
         case R.id.action_c2:
-        	Manager.instance.setMode("C2");
+        	Config.instance.setMode("C2");
         	break;
         case R.id.action_quit: 
             if (socket != null) {
