@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp" >
+
+    <EditText
+        android:id="@+id/debugDisplay"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/debug1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Resume Exec"
+        android:onClick="resumeExec"
+        android:title="Resume Exec" />
+
+    <Button
+        android:id="@+id/debug2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Debug2"
+        android:onClick="dbg2Pressed"
+        android:title="dbg2" />
+
+    <Button
+        android:id="@+id/debug3"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Debug3"
+        android:onClick="dbg3Pressed"
+        android:title="dbg3" />
+
+</LinearLayout>

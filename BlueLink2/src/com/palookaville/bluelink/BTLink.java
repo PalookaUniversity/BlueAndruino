@@ -13,7 +13,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.util.Log;
 
-public class Link  {
+public class BTLink  {
 
 	private static final UUID SECURE_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 	private byte[] latencyData = "measure latency for this message".getBytes();
@@ -54,7 +54,7 @@ public class Link  {
 	BlockingQueue<String> inQueue = new ArrayBlockingQueue<String>(10);
 	BlockingQueue<String> outQueue = new ArrayBlockingQueue<String>(10);
 
-	public Link(){
+	public BTLink(){
 		BlockingQueue<String> inQueue = new ArrayBlockingQueue<String>(10);
 		BlockingQueue<String> outQueue = new ArrayBlockingQueue<String>(10);   	
 	}

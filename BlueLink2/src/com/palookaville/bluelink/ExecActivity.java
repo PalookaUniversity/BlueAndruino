@@ -13,6 +13,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.util.Log;
@@ -51,7 +52,9 @@ public class ExecActivity extends Activity {
     private byte[] latencyData = "measure latency for this message".getBytes();
     byte[] readData = new byte[latencyData.length];
     private BluetoothSocket socket;
-    Link link;
+    BTLink btLink;
+    
+    
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,8 +67,8 @@ public class ExecActivity extends Activity {
                     .commit();
         }
         
-		link = AppManager.instance.link;
-		link.setActivity(this);
+		btLink = Manager.instance.link;
+		btLink.setActivity(this);
     }
     
 	@Override
@@ -107,18 +110,19 @@ public class ExecActivity extends Activity {
             
         	break;
         case R.id.action_link: 
-    		link.activate(this); 
+    		btLink.activate(this); 
         	break;
         case R.id.action_clear: 
     		textViewDisplay.setText(""); 
         	break;
         case R.id.action_config:
-        	AppManager.instance.setMode("Config");
+        	Manager.instance.setMode("Config");
         	Toast.makeText(getApplicationContext(), "Config mode", Toast.LENGTH_SHORT).show();
-
+        	Intent configIntent = new Intent(ExecActivity.this,DebugActivity.class);
+        	startActivity(configIntent);
         	break;
         case R.id.action_c2:
-        	AppManager.instance.setMode("C2");
+        	Manager.instance.setMode("C2");
         	break;
         case R.id.action_quit: 
             if (socket != null) {
@@ -167,22 +171,22 @@ public class ExecActivity extends Activity {
     
     public void onSend1Click(View v) {
 //		Toast.makeText(getApplicationContext(), "onSend1Click", Toast.LENGTH_LONG).show();
-		link.postMessageout("1");
+		btLink.postMessageout("1");
     }
     
     public void onSend2Click(View v) {
 //		Toast.makeText(getApplicationContext(), "onSend2Click", Toast.LENGTH_LONG).show();
-		link.postMessageout("2");
+		btLink.postMessageout("2");
     }
 	
     public void onSend3Click(View v) {
 //		Toast.makeText(getApplicationContext(), "onSend3Click", Toast.LENGTH_LONG).show();
-		link.postMessageout("3");
+		btLink.postMessageout("3");
     }
     
     public void onClickExec(View v) {
     	String cmd = editTextCommand.getText().toString();
-    	link.postMessageout(cmd);
+    	btLink.postMessageout(cmd);
     	String stat = "Exec<"+cmd+">";
     	textViewStatus.setText(stat);
 		Toast.makeText(getApplicationContext(), stat, Toast.LENGTH_SHORT).show();
@@ -218,13 +222,13 @@ public class ExecActivity extends Activity {
         }
         CharSequence[] items = itemList.toArray(new CharSequence[itemList.size()]);
 
-        link.setToConnect(null);
+        btLink.setToConnect(null);
 
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        link.setToConnect(deviceList.get(which));  
+                        btLink.setToConnect(deviceList.get(which));  
                     }
                 })
                 .create();
@@ -232,7 +236,7 @@ public class ExecActivity extends Activity {
         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
-                if (link.getToConnect() != null) {
+                if (btLink.getToConnect() != null) {
                 	Toast.makeText(getApplicationContext(), "Connected", Toast.LENGTH_LONG).show();
                     //connect();
                 }

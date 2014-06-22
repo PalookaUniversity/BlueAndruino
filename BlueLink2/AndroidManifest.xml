@@ -25,6 +25,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.palookaville.bluelink.DebugActivity"
+            android:label="Debug" >
+        </activity>
+        <activity
+            android:name="com.palookaville.bluelink.ConfigActivity"
+            android:label="Debug" >
+        </activity>
     </application>
 
 </manifest>

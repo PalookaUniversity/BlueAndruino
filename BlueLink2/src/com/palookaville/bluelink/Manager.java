@@ -10,7 +10,7 @@ import java.util.concurrent.BlockingQueue;
  * @author gvamos
  *
  */
-class AppManager {
+class Manager {
 	
 	String mode = "Blink";
 	
@@ -18,8 +18,10 @@ class AppManager {
 
 	public void setMode(String mode) { this.mode = mode; }
 
-	Link link = new Link();
+	BTLink link = new BTLink();
 	
-	public static AppManager instance = new AppManager();	
+	public static Manager instance = new Manager();
+	
+	public static Manager getInstance(){ return instance ;};
 
 }
