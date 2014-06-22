@@ -68,15 +68,26 @@
         android:layout_height="1dp"
         android:layout_above="@id/statusView"
         android:background="@android:color/darker_gray" />
+    
+        <ScrollView
+    android:id="@+id/SCROLLER_ID"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_above="@id/statusView"
+    android:scrollbars="vertical"
+    android:fillViewport="true">
 
     <TextView
         android:id="@+id/outputView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/statusView"
         android:autoText="false"
         android:gravity="left"
         android:lineSpacingExtra="-10dp"
         android:textSize="20sp" />
+
+    </ScrollView>
+
+
 
 </RelativeLayout>
