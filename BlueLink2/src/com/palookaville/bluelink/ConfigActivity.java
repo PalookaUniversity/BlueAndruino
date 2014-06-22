@@ -40,19 +40,23 @@ public class ConfigActivity extends Activity {
 		String result = "Exec resumed";
     	Intent configIntent = new Intent(ConfigActivity.this,ExecActivity.class);
     	startActivity(configIntent);
+    	finish();
 //		debugText.setText(result);
 	}
 	
-	public void dbg2Pressed(View view){
-		System.out.println("Pressed DBG2");
-		String result = "Exec resumed";
-
+	public void btLinkStatePressed(View view){
+		String linkState = Config.getInstance().btLink.getLinkState();
+		System.out.println("Pressed DBG2: " + linkState);
+		Toast.makeText(getApplicationContext(), linkState, Toast.LENGTH_LONG).show();
 	}
 
 	public void dbg3Pressed(View view){
-		System.out.println("Pressed DBG3");
-		String result = "DBG3 pressed";
-		debugText.setText(result);
+		String result = "DBG3 pressed: init BT";
+		System.out.println(result);
+		Toast.makeText(getApplicationContext(), "dbg3", Toast.LENGTH_LONG).show();
+		Config.getInstance().btLink.init();
+		Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
+		//debugText.setText(result);
 	}
 	
 	public void display(String msg){

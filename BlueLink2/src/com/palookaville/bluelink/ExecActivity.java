@@ -12,6 +12,7 @@ import android.app.Fragment;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -69,8 +70,9 @@ public class ExecActivity extends Activity {
         
         Config.getInstance().init(this);
         
-		btLink = Config.instance.link;
+		btLink = Config.getInstance().btLink;
 		btLink.setActivity(this);
+		btLink.init();
     }
     
 	@Override
@@ -95,20 +97,21 @@ public class ExecActivity extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
     	View v = getWindow().getDecorView().getRootView();
-    	//Context ac = getApplicationContext();
-    	//View view = (View)ac;
+    	Context ac = getApplicationContext();
+//    	View view = (View)ac;
         switch(item.getItemId()){
         case R.id.action_status: 
 //        	Toast.makeText(getApplicationContext(), "onStatusClick()", Toast.LENGTH_SHORT).show();
         	textViewStatus.setText("Status Display"); 
         	break;
         case R.id.action_pair: 
-            final ArrayList<BluetoothDevice> deviceList = getBluetoothDevices();
-            if (deviceList == null) {
-            	Toast.makeText(getApplicationContext(), "No device list", Toast.LENGTH_LONG).show();
-            } else {
-            	showChooserAndConnect(deviceList);	
-            }
+        	btLink.pair(this);
+//            final ArrayList<BluetoothDevice> deviceList = getBluetoothDevices();
+//            if (deviceList == null) {
+//            	Toast.makeText(getApplicationContext(), "No device list", Toast.LENGTH_LONG).show();
+//            } else {
+//            	Config.getInstance().btLink.showChooserAndConnect(this, deviceList);	
+//            }
             
         	break;
         case R.id.action_link: 
@@ -206,72 +209,72 @@ public class ExecActivity extends Activity {
     }
 		
 	
-    public void onPairClick(View v) {
-        final ArrayList<BluetoothDevice> deviceList = getBluetoothDevices();
-        if (deviceList == null) {
-        	Toast.makeText(getApplicationContext(), "No device list", Toast.LENGTH_LONG).show();
-            return;
-        }
-        showChooserAndConnect(deviceList);
-    }
+//    public void onPairClick(View v) {
+//        final ArrayList<BluetoothDevice> deviceList = getBluetoothDevices();
+//        if (deviceList == null) {
+//        	Toast.makeText(getApplicationContext(), "No device list", Toast.LENGTH_LONG).show();
+//            return;
+//        }
+//        showChooserAndConnect(deviceList);
+//    }
     
 
 
-    private void showChooserAndConnect(final ArrayList<BluetoothDevice> deviceList) {
-        ArrayList<CharSequence> itemList = new ArrayList<CharSequence>();
-        for (BluetoothDevice device : deviceList) {
-            itemList.add(device.getName() + " [" + device.getAddress() + "]");
-        }
-        CharSequence[] items = itemList.toArray(new CharSequence[itemList.size()]);
+//    private void showChooserAndConnect(final ArrayList<BluetoothDevice> deviceList) {
+//        ArrayList<CharSequence> itemList = new ArrayList<CharSequence>();
+//        for (BluetoothDevice device : deviceList) {
+//            itemList.add(device.getName() + " [" + device.getAddress() + "]");
+//        }
+//        CharSequence[] items = itemList.toArray(new CharSequence[itemList.size()]);
+//
+//        btLink.setToConnect(null);
+//
+//        AlertDialog dialog = new AlertDialog.Builder(this)
+//                .setItems(items, new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        btLink.setToConnect(deviceList.get(which));  
+//                    }
+//                })
+//                .create();
+//        dialog.show();
+//        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//            @Override
+//            public void onDismiss(DialogInterface dialog) {
+//                if (btLink.getToConnect() != null) {
+//                	Toast.makeText(getApplicationContext(), "Connected", Toast.LENGTH_LONG).show();
+//                    //connect();
+//                }
+//            }
+//        });
+//    }
 
-        btLink.setToConnect(null);
-
-        AlertDialog dialog = new AlertDialog.Builder(this)
-                .setItems(items, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        btLink.setToConnect(deviceList.get(which));  
-                    }
-                })
-                .create();
-        dialog.show();
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                if (btLink.getToConnect() != null) {
-                	Toast.makeText(getApplicationContext(), "Connected", Toast.LENGTH_LONG).show();
-                    //connect();
-                }
-            }
-        });
-    }
-
-    private ArrayList<BluetoothDevice> getBluetoothDevices() {
-        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (bluetoothAdapter == null) {
-            alarm("No BT on device");
-            return null;
-        }
-
-        if (!bluetoothAdapter.isEnabled()) {
-            alarm("BT on device  disabled");
-            return null;
-        }
-        
-        
-
-        Set<BluetoothDevice> deviceSet = bluetoothAdapter.getBondedDevices();
-        if (deviceSet.isEmpty()) {
-            alarm("Pair first");
-            return null;
-        }
-
-        if (deviceSet == null) {
-            return null;
-        }
-        final ArrayList<BluetoothDevice> deviceList = new ArrayList<BluetoothDevice>(deviceSet);
-        return deviceList;
-    }
+//    private ArrayList<BluetoothDevice> getBluetoothDevices() {
+//        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+//        if (bluetoothAdapter == null) {
+//            alarm("No BT on device");
+//            return null;
+//        }
+//
+//        if (!bluetoothAdapter.isEnabled()) {
+//            alarm("BT on device  disabled");
+//            return null;
+//        }
+//        
+//        
+//
+//        Set<BluetoothDevice> deviceSet = bluetoothAdapter.getBondedDevices();
+//        if (deviceSet.isEmpty()) {
+//            alarm("Pair first");
+//            return null;
+//        }
+//
+//        if (deviceSet == null) {
+//            return null;
+//        }
+//        final ArrayList<BluetoothDevice> deviceList = new ArrayList<BluetoothDevice>(deviceSet);
+//        return deviceList;
+//    }
     
     public void display(final String msg){
 

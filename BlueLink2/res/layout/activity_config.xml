@@ -32,7 +32,7 @@
         android:ems="10" />
 
     <Button
-        android:id="@+id/debug1"
+        android:id="@+id/btn_resumeExec"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:onClick="resumeExec"
@@ -40,13 +40,13 @@
         android:title="Resume Exec" />
 
     <Button
-        android:id="@+id/debug2"
+        android:id="@+id/btn_btLink"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Debug2"
-        android:onClick="dbg2Pressed"
-        android:title="dbg2" />
+        android:text="BT Link State"
+        android:onClick="btLinkStatePressed"
+        android:title="BTLink State" />
 
     <Button
         android:id="@+id/debug3"

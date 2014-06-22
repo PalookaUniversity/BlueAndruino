@@ -19,8 +19,11 @@ class Config {
 	Map<String,String>params = new HashMap<String,String>();	
 	SharedPreferences sharedPreferences;
 	String mode = "Blink";
+	BTLink btLink;
 	
-	private Config(){};
+	private Config(){
+		btLink = new BTLink();
+	};
 	
 	public void init(Context context){
 		sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -29,7 +32,7 @@ class Config {
 
 	public void setMode(String mode) { this.mode = mode; }
 
-	BTLink link = new BTLink();
+
 	
 	public static Config instance = new Config();
 	
