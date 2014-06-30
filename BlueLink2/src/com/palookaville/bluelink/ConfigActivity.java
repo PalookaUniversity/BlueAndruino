@@ -1,12 +1,25 @@
 package com.palookaville.bluelink;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import com.cj.votron.Callback;
+import com.cj.votron.HttpAgent;
+import com.cj.votron.ElectionsActivity.ElectionUpdater;
+import com.cj.votron.ElectionsActivity.VoterUpdater;
 import com.palookaville.bluelink.ExecActivity.PlaceholderFragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 
@@ -16,6 +29,20 @@ public class ConfigActivity extends Activity {
 	public static String displayBuffer = "Move along.  Nothing to see here.";
 	EditText debugText;
 	Config config;
+	
+	HttpAgent voterHttpAgent;
+	
+
+
+	private Spinner scriptListSpinner ;  
+	private ArrayAdapter<String> scriptListAdapter ;
+	private List<String>scriptList = new ArrayList<String>();
+	private VoterUpdater scriptUpdater;
+	private Context context;
+	
+	public String SCRIPT_URL = "http://192.168.1.66.com:8000/scripts";
+	public String ELECTION_URL = "http://votecastomatic.com/elections";
+	public String VOTER_URL = "http://votecastomatic.com/voters";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -65,6 +92,31 @@ public class ConfigActivity extends Activity {
 		debugText.setText(msg);
 		System.out.println("DBG display over");
 		
+	}
+	
+	class VoterUpdater implements Callback{
+
+		@Override
+		public void ok(String jsonData) {
+			scriptList = new ArrayList<String>();
+			try {
+				JSONArray scriptItems = new JSONArray(jsonData);
+				for(int i =0; i<scriptItems.length(); i++){
+					JSONObject electionObject = scriptItems.getJSONObject(i);//FIX THIS
+					scriptList.add(electionObject.getString("name"));
+				}
+				scriptListAdapter.clear();
+				scriptListAdapter.addAll(scriptList);
+				scriptListAdapter.notifyDataSetChanged();				
+			} catch (Exception e){
+				throw new RuntimeException(e);
+			}		
+		}
+
+		@Override
+		public void fail(String s) {
+			throw new RuntimeException("fail called with " +s);			
+		}	
 	}
 
 }

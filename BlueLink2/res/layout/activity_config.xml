@@ -30,6 +30,17 @@
         android:layout_height="wrap_content"
         android:hint="Server Address"
         android:ems="10" />
+    
+     <TextView
+        android:id="@+id/textViewScript"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Script" />
+    
+     <Spinner
+        android:id="@+id/ScriptSpinner"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
 
     <Button
         android:id="@+id/btn_resumeExec"
