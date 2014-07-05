@@ -7,6 +7,16 @@ var http=require('http'),
     ifaces=os.networkInterfaces(),
     express=require('express'),
     app = express(),
+
+
+    base = {
+      dRoot:'/data/tserv/dev/',
+      scripts:'scripts/',
+      logs:'logs/',
+      port:8000
+     },
+
+
     context = {
       dRoot:'/data/tserv/dev/',
       scripts:'scripts/',
@@ -14,7 +24,7 @@ var http=require('http'),
       port:8000
      },
      billBoard = { version:'0.1' },
-    files = fs.readdirSync(context.dRoot + context.scripts);
+    files = fs.readdirSync(base.dRoot + base.scripts);
 
 //app.configure(function(){});
 
@@ -30,7 +40,7 @@ for (var dev in ifaces) {
   });
 }
 
-context.url = 'http://'+context.ipAddress+":"+context.port;
+context.url = 'http://'+context.ipAddress+":"+base.port;
 
 ///////////////////////////////////////////////////
 //
@@ -52,11 +62,11 @@ app.get('/', function(req, res){
 //
 //////////////////////////////////////////////////
 
-app.get('/scripts/:doc', function(req, res){
-  var foo = fs.readFileSync(context.dRoot + context.scripts + '/' + req.params.doc);
+//app.get('/scripts/:doc', function(req, res){
+//  var foo = fs.readFileSync(context.dRoot + context.scripts + '/' + req.params.doc);
   //res.send('deliver script:' + req.params.doc);
-  res.send(foo);
-});
+//  res.send(foo);
+//});
 
 app.get('/scripts', function(req, res){
   res.send(files);
