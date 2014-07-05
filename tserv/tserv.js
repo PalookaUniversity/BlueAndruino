@@ -13,6 +13,7 @@ var http=require('http'),
       logs:'logs/',
       port:8000
      },
+     billBoard = { version:'0.1' },
     files = fs.readdirSync(context.dRoot + context.scripts);
 
 //app.configure(function(){});
@@ -31,6 +32,26 @@ for (var dev in ifaces) {
 
 context.url = 'http://'+context.ipAddress+":"+context.port;
 
+///////////////////////////////////////////////////
+//
+// Top
+//
+///////////////////////////////////////////////////
+
+billBoard.scripts = context.url + '/scripts';
+billBoard.logs    = context.url + '/logs';
+
+
+app.get('/', function(req, res){
+  res.send(JSON.stringify(billBoard));
+})
+
+///////////////////////////////////////////////////
+//
+// Services 
+//
+//////////////////////////////////////////////////
+
 app.get('/scripts/:doc', function(req, res){
   var foo = fs.readFileSync(context.dRoot + context.scripts + '/' + req.params.doc);
   //res.send('deliver script:' + req.params.doc);
@@ -41,9 +62,7 @@ app.get('/scripts', function(req, res){
   res.send(files);
 });
 
-app.get('/', function(req, res){
-  res.send('hello world');
-});
+
 
 app.listen(context.port);
 
