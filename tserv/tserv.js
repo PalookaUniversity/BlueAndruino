@@ -8,23 +8,18 @@ var http=require('http'),
     express=require('express'),
     app = express(),
 
-
     base = {
       dRoot:'/data/tserv/dev/',
       scripts:'scripts/',
       logs:'logs/',
+      devices:'devices/',
+      config:'config.json',
       port:8000
      },
 
-
-    context = {
-      dRoot:'/data/tserv/dev/',
-      scripts:'scripts/',
-      logs:'logs/',
-      port:8000
-     },
-     billBoard = { version:'0.1' },
-    files = fs.readdirSync(base.dRoot + base.scripts);
+    context = {},
+     billBoard = { version:'0.1' };
+//    files = fs.readdirSync(base.dRoot + base.scripts);
 
 //app.configure(function(){});
 
@@ -41,6 +36,7 @@ for (var dev in ifaces) {
 }
 
 context.url = 'http://'+context.ipAddress+":"+base.port;
+context.scripts = fs.readdirSync(base.dRoot + base.scripts);
 
 ///////////////////////////////////////////////////
 //
@@ -50,6 +46,7 @@ context.url = 'http://'+context.ipAddress+":"+base.port;
 
 billBoard.scripts = context.url + '/scripts';
 billBoard.logs    = context.url + '/logs';
+billBoard.devices    = context.url + '/devices';
 
 
 app.get('/', function(req, res){
@@ -69,11 +66,30 @@ app.get('/', function(req, res){
 //});
 
 app.get('/scripts', function(req, res){
-  res.send(files);
+  res.send(fs.readdirSync(base.dRoot + base.scripts));
+});
+
+app.get('/scripts/:id', function(req, res){
+  res.send(fs.readFileSync(base.dRoot + base.scripts + req.params.id));
+});
+
+app.get('/logs', function(req, res){
+  res.send(fs.readdirSync(base.dRoot + base.logs));
+});
+
+app.get('/devices', function(req, res){
+  res.send(fs.readdirSync(base.dRoot + base.devices));
+});
+
+app.get('/devices/:id', function(req, res){
+  res.send(fs.readFileSync(base.dRoot + base.scripts + req.params.id));
+});
+
+app.get('/config', function(req, res){
+  res.send(fs.readFileSync(base.dRoot + base.config));
 });
 
 
-
-app.listen(context.port);
+app.listen(base.port);
 
 console.log("Server running at "+context.url);
