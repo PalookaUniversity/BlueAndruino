@@ -8,7 +8,9 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.palookaville.bluelink.MainActivity$PlaceholderFragment" >
     
-        <RelativeLayout
+
+    
+    <RelativeLayout
         android:id="@+id/block_cmd_panel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -52,6 +54,7 @@
             android:text="" />
     </RelativeLayout>
 
+
     <TextView
         android:id="@+id/statusView"
         android:layout_width="fill_parent"
@@ -69,13 +72,13 @@
         android:layout_above="@id/statusView"
         android:background="@android:color/darker_gray" />
     
-        <ScrollView
-    android:id="@+id/SCROLLER_ID"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:layout_above="@id/statusView"
-    android:scrollbars="vertical"
-    android:fillViewport="true">
+    <ScrollView
+	    android:id="@+id/SCROLLER_ID"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_above="@id/statusView"
+	    android:scrollbars="vertical"
+	    android:fillViewport="true">
 
     <TextView
         android:id="@+id/outputView"

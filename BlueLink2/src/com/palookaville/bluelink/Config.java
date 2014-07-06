@@ -16,6 +16,8 @@ import android.preference.PreferenceManager;
 
 class Config {
 	
+	public static final String TEST_SERVER = "TestServer";
+	
 	Map<String,String>params = new HashMap<String,String>();	
 	SharedPreferences sharedPreferences;
 	String mode = "Blink";

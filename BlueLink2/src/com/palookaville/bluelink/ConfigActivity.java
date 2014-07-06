@@ -6,12 +6,6 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.cj.votron.Callback;
-import com.cj.votron.HttpAgent;
-import com.cj.votron.ElectionsActivity.ElectionUpdater;
-import com.cj.votron.ElectionsActivity.VoterUpdater;
-import com.palookaville.bluelink.ExecActivity.PlaceholderFragment;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -22,9 +16,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-
-public class ConfigActivity extends Activity {
-	
+public class ConfigActivity extends Activity {	
 	
 	public static String displayBuffer = "Move along.  Nothing to see here.";
 	EditText debugText;
@@ -32,13 +24,16 @@ public class ConfigActivity extends Activity {
 	
 	HttpAgent voterHttpAgent;
 	
+    private EditText textEditServerAddress;
+    private String serverAddress;
 
-
+	
 	private Spinner scriptListSpinner ;  
 	private ArrayAdapter<String> scriptListAdapter ;
 	private List<String>scriptList = new ArrayList<String>();
-	private VoterUpdater scriptUpdater;
+	private ScriptUpdater scriptUpdater;
 	private Context context;
+	
 	
 	public String SCRIPT_URL = "http://192.168.1.66.com:8000/scripts";
 	public String ELECTION_URL = "http://votecastomatic.com/elections";
@@ -57,6 +52,9 @@ public class ConfigActivity extends Activity {
 
 		//debugText = (EditText)findViewById(R.id.debugDisplay);
 		config = Config.getInstance();
+		textEditServerAddress = (EditText) this.findViewById(R.id.textEditServerAddress);
+		serverAddress = config.getParam(Config.TEST_SERVER);
+		textEditServerAddress.setText(serverAddress);		
 	}
 
 
@@ -76,6 +74,24 @@ public class ConfigActivity extends Activity {
 		System.out.println("Pressed DBG2: " + linkState);
 		Toast.makeText(getApplicationContext(), linkState, Toast.LENGTH_LONG).show();
 	}
+	
+	public void configExecPressed(View view){
+		String result = "Config Exec pressed";
+		setServer();
+		System.out.println(result);
+		//
+		// Get script list here
+		//
+		Toast.makeText(getApplicationContext(), "configExecPressed " , Toast.LENGTH_LONG).show();
+	}
+	
+	private void setServer(){
+		String serverUrl = textEditServerAddress.getText().toString();
+		if (!serverUrl.startsWith("")){
+			serverUrl = "http://" + serverUrl;	
+		}
+		config.setParam(Config.TEST_SERVER, serverUrl);	
+	}
 
 	public void dbg3Pressed(View view){
 		String result = "DBG3 pressed: init BT";
@@ -94,7 +110,7 @@ public class ConfigActivity extends Activity {
 		
 	}
 	
-	class VoterUpdater implements Callback{
+	class ScriptUpdater implements Callback{
 
 		@Override
 		public void ok(String jsonData) {
@@ -118,5 +134,4 @@ public class ConfigActivity extends Activity {
 			throw new RuntimeException("fail called with " +s);			
 		}	
 	}
-
 }

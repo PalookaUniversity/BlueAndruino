@@ -58,6 +58,15 @@
         android:text="BT Link State"
         android:onClick="btLinkStatePressed"
         android:title="BTLink State" />
+    
+        <Button
+        android:id="@+id/configExec"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Config Exec"
+        android:onClick="configExecPressed"
+        android:title="Config Exec" />
 
     <Button
         android:id="@+id/debug3"
