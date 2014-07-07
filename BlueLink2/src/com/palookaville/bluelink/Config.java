@@ -17,11 +17,17 @@ import android.preference.PreferenceManager;
 class Config {
 	
 	public static final String TEST_SERVER = "TestServer";
+	public static final String CURRENT_SCRIPT_URL = "CurrentScriptUrl";
 	
 	Map<String,String>params = new HashMap<String,String>();	
 	SharedPreferences sharedPreferences;
 	String mode = "Blink";
 	BTLink btLink;
+	
+	String scriptText = "";	
+	public String getScriptText() { return scriptText; }
+	void setScriptText(String s){ scriptText = s; }
+	
 	
 	private Config(){
 		btLink = new BTLink();

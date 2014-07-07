@@ -67,6 +67,15 @@
         android:text="Config Exec"
         android:onClick="configExecPressed"
         android:title="Config Exec" />
+        
+            <Button
+        android:id="@+id/loadScript"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Load Script"
+        android:onClick="loadScriptPressed"
+        android:title="Load Script" />
 
     <Button
         android:id="@+id/debug3"

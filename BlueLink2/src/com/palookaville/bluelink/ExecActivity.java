@@ -217,6 +217,14 @@ public class ExecActivity extends Activity {
 		String diagnostic = "<" + txt.toString().trim() + ">";
 		textViewStatus.setText("Check:"+diagnostic); 
     }
+    
+    public void onClickRunScript(View v) {
+      String scriptText = Config.getInstance().getScriptText();
+      btLink.postMessageout(scriptText);
+  	  String stat = "Run Script";
+  	  textViewStatus.setText(stat);
+	  Toast.makeText(getApplicationContext(), scriptText, Toast.LENGTH_LONG).show();
+    }
 		
 	
 //    public void onPairClick(View v) {
