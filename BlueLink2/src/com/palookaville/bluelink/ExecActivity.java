@@ -17,6 +17,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -79,11 +80,17 @@ public class ExecActivity extends Activity {
 	@Override
 	public void onStart(){
 	    super.onStart();
+	    init();
+
+	}
+	
+	private void init(){
 		textViewStatus = (TextView) findViewById(R.id.statusView);
 		textViewDisplay = (TextView) findViewById(R.id.outputView);
+		textViewDisplay.setMovementMethod(new ScrollingMovementMethod());
 		editTextCommand = (EditText)findViewById(R.id.edit_text_cmd);
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
+		
 	}
 
 
@@ -285,6 +292,14 @@ public class ExecActivity extends Activity {
             @Override
             public void run() {
                 textViewDisplay.append(msg + "\n");
+                                
+//                int scroll_amount = textViewDisplay.getBottom();
+//
+//                if(textViewDisplay.getLineCount() > 20){
+//                    scroll_amount = scroll_amount + textViewDisplay.getLineHeight();
+//                    textViewDisplay.scrollTo(0, scroll_amount - 20);
+//                }
+             
             }
         });
     }
