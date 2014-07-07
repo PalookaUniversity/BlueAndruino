@@ -24,10 +24,13 @@ public class ConfigActivity extends Activity {
 	Config config;
 	
 	HttpAgent voterHttpAgent;
+	HttpAgent billboardHttpAgent;
+	String scriptsUrl = "";
 	
     private EditText textEditServerAddress;
     private String serverAddress;
 
+    private BillboardUpdater billboardUpdater;
 	
 	private Spinner scriptListSpinner ;  
 	private ArrayAdapter<String> scriptListAdapter ;
@@ -52,13 +55,14 @@ public class ConfigActivity extends Activity {
 	void initialize(){
 
 		//debugText = (EditText)findViewById(R.id.debugDisplay);
+		context = this;
 		config = Config.getInstance();
 		textEditServerAddress = (EditText) this.findViewById(R.id.textEditServerAddress);
 		serverAddress = config.getParam(Config.TEST_SERVER);
 		textEditServerAddress.setText(serverAddress);		
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 	}
-
+	
 
 	public void resumeExec(View view){
     	Toast.makeText(getApplicationContext(), "resumeExec()", Toast.LENGTH_SHORT).show();
@@ -84,7 +88,15 @@ public class ConfigActivity extends Activity {
 		//
 		// Get script list here
 		//
+		updateBillboard();
 		Toast.makeText(getApplicationContext(), "configExecPressed " , Toast.LENGTH_LONG).show();
+	}
+	
+	void updateBillboard(){
+		billboardUpdater = new BillboardUpdater();
+		billboardHttpAgent = new HttpAgent(context);
+		billboardHttpAgent.fetch(serverAddress,billboardUpdater,"loading billboard");
+		Toast.makeText(getApplicationContext(), "update Billboard", Toast.LENGTH_LONG).show();
 	}
 	
 	private void setServer(){
@@ -126,6 +138,26 @@ public class ConfigActivity extends Activity {
 				scriptListAdapter.clear();
 				scriptListAdapter.addAll(scriptList);
 				scriptListAdapter.notifyDataSetChanged();				
+			} catch (Exception e){
+				throw new RuntimeException(e);
+			}		
+		}
+
+		@Override
+		public void fail(String s) {
+			throw new RuntimeException("fail called with " +s);			
+		}	
+	}
+	
+	class BillboardUpdater implements Callback{
+
+		@Override
+		public void ok(String jsonData) {
+			//scriptList = new ArrayList<String>();
+			try {
+				JSONObject billboardItems = new JSONObject(jsonData);
+				scriptsUrl = billboardItems.getString("scripts");
+			
 			} catch (Exception e){
 				throw new RuntimeException(e);
 			}		
