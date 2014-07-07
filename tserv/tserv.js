@@ -18,19 +18,17 @@ var http=require('http'),
      },
 
     context = {},
-     billBoard = { version:'0.1' };
+     billboard = { version:'0.1' };
 //    files = fs.readdirSync(base.dRoot + base.scripts);
 
 //app.configure(function(){});
 
 for (var dev in ifaces) {
-  //var alias=0;
   ifaces[dev].forEach(function(details){
     if (details.family=='IPv4') {
       if (details.address !== '127.0.0.1'){
 	context.ipAddress=details.address;
       }
-    //  ++alias;
     }
   });
 }
@@ -44,13 +42,13 @@ context.scripts = fs.readdirSync(base.dRoot + base.scripts);
 //
 ///////////////////////////////////////////////////
 
-billBoard.scripts = context.url + '/scripts';
-billBoard.logs    = context.url + '/logs';
-billBoard.devices    = context.url + '/devices';
+billboard.scripts = context.url + '/scripts';
+billboard.logs    = context.url + '/logs';
+billboard.devices    = context.url + '/devices';
 
 
 app.get('/', function(req, res){
-  res.send(JSON.stringify(billBoard));
+  res.send(JSON.stringify(billboard));
 })
 
 ///////////////////////////////////////////////////
@@ -66,7 +64,14 @@ app.get('/', function(req, res){
 //});
 
 app.get('/scripts', function(req, res){
-  res.send(fs.readdirSync(base.dRoot + base.scripts));
+  var scriptRoot,
+      scriptUrls,
+      scriptFiles;
+  scriptRoot = billboard.scripts;
+  scriptFiles = fs.readdirSync(base.dRoot + base.scripts);
+  scriptUrls = scriptFiles.map(function(fileName){return scriptRoot + "/" +  fileName })
+  //res.send(fs.readdirSync(base.dRoot + base.scripts));
+  res.send(scriptUrls);
 });
 
 app.get('/scripts/:id', function(req, res){
