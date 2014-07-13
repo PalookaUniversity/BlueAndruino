@@ -64,9 +64,9 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Config Exec"
-        android:onClick="configExecPressed"
-        android:title="Config Exec" />
+        android:text="Fetch Billboard"
+        android:onClick="fetchBillboard"
+        android:title="Fetch Billboard" />
         
             <Button
         android:id="@+id/loadScript"

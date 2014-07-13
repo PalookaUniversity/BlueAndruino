@@ -96,21 +96,25 @@ public class ConfigActivity extends Activity {
 		Toast.makeText(getApplicationContext(), linkState, Toast.LENGTH_LONG).show();
 	}
 	
-	public void configExecPressed(View view){
-		String result = "Config Exec pressed";
-		setServer();
+	public void fetchBillboard(View view){
+		
+
+		String serverUrl = textEditServerAddress.getText().toString();
+		if (!serverUrl.startsWith("")){
+			serverUrl = "http://" + serverUrl;	
+		}
+//		serverUrl = "http://192.168.1.666:800";
+		String result = "Fetch Billboard pressed<"+serverUrl+">";
+		Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
+		config.setParam(Config.TEST_SERVER, serverUrl);	
+
 		System.out.println(result);
 		//
 		// Get script list here
 		//
-		updateBillboard();
-		Toast.makeText(getApplicationContext(), "configExecPressed " , Toast.LENGTH_LONG).show();
-	}
-	
-	void updateBillboard(){
-
-		billboardHttpAgent.fetch(serverAddress,billboardUpdater,"loading billboard");
-		Toast.makeText(getApplicationContext(), "update Billboard", Toast.LENGTH_LONG).show();
+		//billboardHttpAgent.fetch(serverAddress,billboardUpdater,"loading billboard");
+		billboardHttpAgent.fetch(serverUrl,billboardUpdater,"loading billboard");
+		Toast.makeText(getApplicationContext(), "fetchBillboard complete " , Toast.LENGTH_LONG).show();
 	}
 	
 	void updateScriptThingie(){
@@ -119,14 +123,6 @@ public class ConfigActivity extends Activity {
 		Toast.makeText(getApplicationContext(), "load scripts", Toast.LENGTH_LONG).show();
 	}
 	
-	
-	private void setServer(){
-		String serverUrl = textEditServerAddress.getText().toString();
-		if (!serverUrl.startsWith("")){
-			serverUrl = "http://" + serverUrl;	
-		}
-		config.setParam(Config.TEST_SERVER, serverUrl);	
-	}
 
 	public void dbg3Pressed(View view){
 		String result = "DBG3 pressed: init BT";
