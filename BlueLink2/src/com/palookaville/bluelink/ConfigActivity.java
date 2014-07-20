@@ -103,7 +103,7 @@ public class ConfigActivity extends Activity {
 		if (!serverUrl.startsWith("")){
 			serverUrl = "http://" + serverUrl;	
 		}
-//		serverUrl = "http://192.168.1.666:800";
+//		serverUrl = "http://192.168.1.666:8000";
 		String result = "Fetch Billboard pressed<"+serverUrl+">";
 		Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
 		config.setParam(Config.TEST_SERVER, serverUrl);	

@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -15,22 +16,19 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.DialogInterface;
-import android.util.Log;
 import android.widget.Toast;
 
 public class BTLink  {
 
 	private static final UUID SECURE_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-	private byte[] latencyData = "measure latency for this message".getBytes();
-	
 	public static String BT_ADDRESS = "BT_ADDRESS";
 	public static String NON_SELECTED = "none selected";
-
 
 	BluetoothSocket socket;
 	ExecActivity activity;
 	BluetoothDevice device;
     String btAddress = NON_SELECTED;
+    String getBtAddress(){ return btAddress; }
     
 
 	private BluetoothDevice toConnect;
@@ -39,10 +37,7 @@ public class BTLink  {
 	BlockingQueue<String> inQueue = new ArrayBlockingQueue<String>(10);
 	BlockingQueue<String> outQueue = new ArrayBlockingQueue<String>(10);
 	
-	public BTLink(){
-		BlockingQueue<String> inQueue = new ArrayBlockingQueue<String>(10);
-		BlockingQueue<String> outQueue = new ArrayBlockingQueue<String>(10); 
-	}
+	public BTLink(){}
 	
 	public void init(){
 		btAddress = Config.getInstance().getParam(BT_ADDRESS);
@@ -95,18 +90,6 @@ public class BTLink  {
 		writer.start();
 		reader.start();
 		System.out.println("Reader and writer started.");
-		
-		final ExecActivity callingActivity = activity;
-		
-		//activity.runOnUiThread(new Runnable() {
-		//@Override
-		//public void run() {
-
-		//	callingActivity.mTextViewStrength.append(" " + callingActivity.getString(R.string.disconnected));
-		//};
-		//});
-		
-		
 	}
 
 	public void postMessageout(String msg){
@@ -124,7 +107,6 @@ public class BTLink  {
 		try {
 			socket.getOutputStream().write(msg.getBytes());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		System.out.println("Finished writing");
@@ -133,19 +115,12 @@ public class BTLink  {
 	public Thread writer = new Thread(new Runnable(){
 		@Override
 		public void run() {
-			//bluetoothAdapter.cancelDiscovery();
 			try {
-//				socket = getBluetoothSocket();
-//				socket.connect();
 				while (socket.isConnected()) {
 					String msgOut = outQueue.take();
 					socket.getOutputStream().write(msgOut.getBytes());
 				}
-
-			} catch (IOException e){
-
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
+			} catch (Exception e) {
 				e.printStackTrace();			}			
 		}		
 	});	
@@ -154,13 +129,9 @@ public class BTLink  {
 	public Thread reader = new Thread(new Runnable(){
 		@Override
 		public void run() {
-			//bluetoothAdapter.cancelDiscovery();
 			Integer ct = 0;
 			try {
-//				socket = getBluetoothSocket();
-//				socket.connect();
 				BufferedReader r = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
 				while (socket.isConnected()) {
 					String msg = r.readLine();
 					//inQueue.add(msg);
@@ -175,30 +146,12 @@ public class BTLink  {
 		
 	
     private ArrayList<BluetoothDevice> getBluetoothDevices() {
+    	Set<BluetoothDevice> deviceSet = new HashSet<BluetoothDevice>();
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (bluetoothAdapter == null) {
-            //alarm("No BT on device");
-            return null;
+        if (bluetoothAdapter != null && bluetoothAdapter.isEnabled()){
+        	deviceSet = bluetoothAdapter.getBondedDevices();
         }
-
-        if (!bluetoothAdapter.isEnabled()) {
-            //alarm("BT on device  disabled");
-            return null;
-        }
-        
-        
-
-        Set<BluetoothDevice> deviceSet = bluetoothAdapter.getBondedDevices();
-        if (deviceSet.isEmpty()) {
-            //alarm("Pair first");
-            return null;
-        }
-
-        if (deviceSet == null) {
-            return null;
-        }
-        final ArrayList<BluetoothDevice> deviceList = new ArrayList<BluetoothDevice>(deviceSet);
-        return deviceList;
+        return new ArrayList<BluetoothDevice>(deviceSet);
     }
 	
 	void pair(Activity ac){
@@ -213,8 +166,7 @@ public class BTLink  {
 	/**
 	 * 
 	 * @param deviceList
-	 */
-	
+	 */	
     void showChooserAndConnect(final Activity ac, final ArrayList<BluetoothDevice> deviceList) {
         ArrayList<CharSequence> itemList = new ArrayList<CharSequence>();
         for (BluetoothDevice device : deviceList) {
@@ -248,5 +200,3 @@ public class BTLink  {
         });
     }
 }
-
-

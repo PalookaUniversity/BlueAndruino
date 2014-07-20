@@ -19,10 +19,23 @@ class Config {
 	public static final String TEST_SERVER = "TestServer";
 	public static final String CURRENT_SCRIPT_URL = "CurrentScriptUrl";
 	
+	public static final String STATE_INIT = "INIT";
+	public static final String STATE_PAIRED = "PAIRED";
+	public static final String STATE_LINKED = "LINKED";
+	
+	String state = STATE_INIT;	
+	public String getState() { return state; }
+	public void setState(String state) { this.state = state; }
+
+
+
 	Map<String,String>params = new HashMap<String,String>();	
 	SharedPreferences sharedPreferences;
 	String mode = "Blink";
 	BTLink btLink;
+	String testServerAddress;
+	String btAddress;
+	
 	
 	String scriptText = "";	
 	public String getScriptText() { return scriptText; }
