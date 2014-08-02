@@ -32,7 +32,6 @@ public class ServerLink {
 	
 	public class Fetch implements AsyncWebAction {
 		
-
 		String result;
 		String status = "OK";
 		String query;
@@ -264,8 +263,4 @@ public class ServerLink {
 		}		
 		return cleanJson;
 	}
-	
-	
-	
-
 }

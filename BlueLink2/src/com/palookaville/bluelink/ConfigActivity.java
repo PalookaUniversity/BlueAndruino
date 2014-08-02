@@ -30,7 +30,7 @@ public class ConfigActivity extends Activity {
 	ScriptLoader scriptLoader;
 	
     EditText textEditServerAddress;
-    String serverAddress;
+    //String serverAddress;
 
     BillboardUpdater billboardUpdater;
 	
@@ -63,18 +63,14 @@ public class ConfigActivity extends Activity {
 		billboardUpdater = new BillboardUpdater();
 		billboardHttpAgent = new HttpAgent(context);
 		
-		scriptLoader = new ScriptLoader();
-		
 		scriptUpdater = new ScriptUpdater();
 		scriptListSpinner = (Spinner) findViewById( R.id.ScriptSpinner );  	    
 		scriptListAdapter = new ArrayAdapter<String>(this, R.layout.simplerow, scriptList);  
 		scriptListSpinner.setAdapter( scriptListAdapter );   
-		scriptHttpAgent = new HttpAgent(context);
+//		scriptHttpAgent = new HttpAgent(context);
 		
-
 		textEditServerAddress = (EditText) this.findViewById(R.id.textEditServerAddress);
-		serverAddress = config.getParam(Config.TEST_SERVER);
-		textEditServerAddress.setText(serverAddress);		
+		textEditServerAddress.setText(Config.getInstance().serverUrl);		
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 	}
 	
@@ -100,7 +96,7 @@ public class ConfigActivity extends Activity {
 		
 
 		String serverUrl = textEditServerAddress.getText().toString();
-		if (!serverUrl.startsWith("")){
+		if (!serverUrl.startsWith("http://")){
 			serverUrl = "http://" + serverUrl;	
 		}
 //		serverUrl = "http://192.168.1.666:8000";
@@ -113,6 +109,7 @@ public class ConfigActivity extends Activity {
 		// Get script list here
 		//
 		//billboardHttpAgent.fetch(serverAddress,billboardUpdater,"loading billboard");
+		
 		billboardHttpAgent.fetch(serverUrl,billboardUpdater,"loading billboard");
 		Toast.makeText(getApplicationContext(), "fetchBillboard complete " , Toast.LENGTH_LONG).show();
 	}
@@ -127,20 +124,30 @@ public class ConfigActivity extends Activity {
 	public void dbg3Pressed(View view){
 		String result = "DBG3 pressed: init BT";
 		System.out.println(result);
-		
+		//Util.getInstance().setContext(context).driveTest("dbg3");
+		selectScriptPressed(view);
 		Toast.makeText(getApplicationContext(), "dbg3 ", Toast.LENGTH_LONG).show();
 		//Config.getInstance().btLink.init();
 		//Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
 		//debugText.setText(result);
 	}
 	
+	public void selectScriptPressed(View view){
+		String scriptUrl = (String)scriptListSpinner.getSelectedItem();	
+		config.setParam(Config.CURRENT_SCRIPT_URL, scriptUrl);
+		String fileName = scriptHttpAgent.name(scriptUrl);
+		String text = Util.getInstance().getTextFile(fileName, Config.SCRIPT_DIRPATH);
+		config.setScriptText(text);
+	}
+	
 	public void loadScriptPressed(View view){
 		
 		String scriptUrl = (String)scriptListSpinner.getSelectedItem();
 		config.setParam(Config.CURRENT_SCRIPT_URL, scriptUrl);
-		scriptHttpAgent.fetch(scriptUrl,scriptLoader,"loading script " + scriptUrl);
 
 		String result = "Load Script Pressed " + scriptUrl;
+		scriptLoader = new ScriptLoader(this);
+		scriptLoader.fetch(scriptUrl);
 		System.out.println(result);
 		
 		Toast.makeText(getApplicationContext(), "Load Script " + scriptUrl, Toast.LENGTH_LONG).show();
@@ -167,6 +174,7 @@ public class ConfigActivity extends Activity {
 				for(int i =0; i<scriptItems.length(); i++){
 					String scriptUrl = scriptItems.getString(i);
 					scriptList.add(scriptUrl);
+					
 				}
 				scriptListAdapter.clear();
 				scriptListAdapter.addAll(scriptList);
@@ -204,10 +212,30 @@ public class ConfigActivity extends Activity {
 	}
 	
 	class ScriptLoader implements Callback{
+		
+		final HttpAgent httpAgent;	
+		String scriptName;
+		public String getScriptName() { return scriptName; }
+		public void setScriptName(String scriptName) { this.scriptName = scriptName; }
+		
+		ScriptLoader(Context context){
+			httpAgent = new HttpAgent(context);			
+		}
+		
+		void fetch(String url){
+			String[] parts = url.split("/");
+			scriptName = parts[parts.length - 1];
+			httpAgent.fetch(url,this,"loading script " + url);
+		}
 
 		@Override
 		public void ok(String text) {
-			config.setScriptText(text);	
+			
+			Util.getInstance().guaranteeTextFile(scriptName, Config.SCRIPT_DIRPATH, text);
+		    String data = Util.getInstance().getTextFile(scriptName, Config.SCRIPT_DIRPATH);
+		    // TODO: remove self test when stable
+		    assert(text.trim().equals(data.trim()));		    
+		    config.setScriptText(text);
 		}
 
 		@Override

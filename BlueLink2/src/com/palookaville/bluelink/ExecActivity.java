@@ -85,6 +85,7 @@ public class ExecActivity extends Activity {
 	}
 	
 	private void init(){
+		Config.getInstance().startup(this);
 		textViewStatus = (TextView) findViewById(R.id.statusView);
 		textViewDisplay = (TextView) findViewById(R.id.outputView);
 		textViewDisplay.setMovementMethod(new ScrollingMovementMethod());
