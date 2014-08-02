@@ -25,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,6 +53,9 @@ public class ExecActivity extends Activity {
     TextView textViewDisplay;
     EditText editTextCommand;
     ActionBar actionBar;
+    
+    Button buttonSetState;
+    
     private byte[] latencyData = "measure latency for this message".getBytes();
     byte[] readData = new byte[latencyData.length];
     private BluetoothSocket socket;
@@ -90,6 +94,7 @@ public class ExecActivity extends Activity {
 		textViewDisplay = (TextView) findViewById(R.id.outputView);
 		textViewDisplay.setMovementMethod(new ScrollingMovementMethod());
 		editTextCommand = (EditText)findViewById(R.id.edit_text_cmd);
+		buttonSetState = (Button)findViewById(R.id.btn_setState);
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		
 	}
@@ -198,6 +203,12 @@ public class ExecActivity extends Activity {
     public void onSend3Click(View v) {
 //		Toast.makeText(getApplicationContext(), "onSend3Click", Toast.LENGTH_LONG).show();
 		btLink.postMessageout("3");
+    }
+    
+    public void onClickSetState(View v) {
+    	buttonSetState.setText("Boom");
+    	String stat = "Set State pushed";
+		Toast.makeText(getApplicationContext(), stat, Toast.LENGTH_SHORT).show();
     }
     
     public void onClickExec(View v) {

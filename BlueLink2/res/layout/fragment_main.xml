@@ -1,12 +1,11 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.palookaville.bluelink.MainActivity$PlaceholderFragment" >
+    tools:context="com.palookaville.bluelink.MainActivity$PlaceholderFragment" xmlns:android="http://schemas.android.com/apk/res/android">
     
     <RelativeLayout
         android:id="@+id/block_control_panel"
@@ -29,11 +28,11 @@
 	        android:paddingTop="1dp" >
 	        	
 	        <Button
-	            android:id="@+id/btn_foo"
+	            android:id="@+id/btn_setState"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
-	            android:onClick="onClickExec"
-	            android:text="Foo"
+	            android:onClick="onClickSetState"
+	            android:text="SetState"
 	            android:textSize="20sp" />
 	        
 	        <Button
@@ -45,12 +44,12 @@
 	            android:textSize="20sp" />
 	
 		    <TextView
-		        android:id="@+id/statusView"
+		        android:id="@+id/statusViewState"
 		        android:layout_width="fill_parent"
 		        android:layout_height="wrap_content"
 		        android:autoText="false"
 		        android:gravity="left"
-		        android:lineSpacingExtra="-10dp"
+                android:text="View state"
 		        android:textSize="20sp" />
 	        
 	    </LinearLayout>        
