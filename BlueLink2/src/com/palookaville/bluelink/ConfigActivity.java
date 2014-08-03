@@ -34,6 +34,8 @@ public class ConfigActivity extends Activity {
     //String serverAddress;
 
     BillboardUpdater billboardUpdater;
+    
+    Button buttonReSyncServer;
 	
 	Spinner scriptListSpinner ;  
 	ArrayAdapter<String> scriptListAdapter ;
@@ -59,13 +61,11 @@ public class ConfigActivity extends Activity {
 
 		context = this;
 		config = Config.getInstance();
-				
-		billboardUpdater = new BillboardUpdater();
-		billboardHttpAgent = new HttpAgent(context);
 		
 		buttonRunScript = (Button)findViewById(R.id.btn_run_script);
 		
-		scriptUpdater = new ScriptUpdater();
+//		buttonReSyncServer = (Button)findViewById(R.id.btn_reSynchServer);
+		
 		scriptListSpinner = (Spinner) findViewById( R.id.ScriptSpinner );  	    
 		scriptListAdapter = new ArrayAdapter<String>(this, R.layout.simplerow, scriptList);  
 		scriptListSpinner.setAdapter( scriptListAdapter );   
@@ -80,7 +80,6 @@ public class ConfigActivity extends Activity {
     	Toast.makeText(getApplicationContext(), "resumeExec()", Toast.LENGTH_SHORT).show();
 
 		System.out.println("Pressed Resume");
-		String result = "Exec resumed";
     	Intent configIntent = new Intent(ConfigActivity.this,ExecActivity.class);
     	startActivity(configIntent);
     	finish();
@@ -92,19 +91,29 @@ public class ConfigActivity extends Activity {
 		Toast.makeText(getApplicationContext(), linkState, Toast.LENGTH_LONG).show();
 	}
 	
+	private String canonicalServerUrl(){
+		String serverUrl = textEditServerAddress.getText().toString();
+		String canonicalUrl = "";
+		if (!"".equals(serverUrl)){
+			if (!serverUrl.startsWith("http://")){
+				canonicalUrl = "http://"+serverUrl;
+				if (!canonicalUrl.contains(":8000")){
+					canonicalUrl = canonicalUrl + ":8000/";
+				}
+			}
+		}
+		textEditServerAddress.setText(canonicalUrl);
+		return canonicalUrl;
+	}
+	
 	public void fetchBillboard(View view){
 		
-
-		String serverUrl = textEditServerAddress.getText().toString();
-		Button buttonReSyncServer = (Button)findViewById(R.id.btn_reSynchServer);
-		if (!serverUrl.startsWith("http://")){
-			serverUrl = "http://" + serverUrl;		buttonReSyncServer = (Button)findViewById(R.id.btn_reSynchServer);
-			
-			serverUrl = Config.getInstance().getParam(Config.TEST_SERVER, "");
-			if (!serverUrl.equals("")){
-				buttonReSyncServer.setEnabled(true);
-			}	
+		String serverUrl = canonicalServerUrl();
+		if ("".equals(serverUrl)){
+			Toast.makeText(getApplicationContext(), "No server URL", Toast.LENGTH_LONG).show();
+			return;
 		}
+//		Button buttonReSyncServer = (Button)findViewById(R.id.btn_reSynchServer);
 //		serverUrl = "http://192.168.1.666:8000";
 		String result = "Fetch Billboard pressed<"+serverUrl+">";
 		Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
@@ -114,15 +123,15 @@ public class ConfigActivity extends Activity {
 		//
 		// Get script list here
 		//
-		//billboardHttpAgent.fetch(serverAddress,billboardUpdater,"loading billboard");
-		
-		billboardHttpAgent.fetch(serverUrl,billboardUpdater,"loading billboard");
+		billboardUpdater = new BillboardUpdater(this);
+		billboardUpdater.fetch(serverUrl);
 		Toast.makeText(getApplicationContext(), "fetchBillboard complete " , Toast.LENGTH_LONG).show();
 	}
 	
-	void updateScriptThingie(){
+	void updateScriptList(){
 
-		scriptHttpAgent.fetch(scriptsUrl,scriptUpdater,"loading scripts");
+		scriptUpdater = new ScriptUpdater(this);
+		scriptUpdater.fetch(scriptsUrl);
 		Toast.makeText(getApplicationContext(), "load scripts", Toast.LENGTH_LONG).show();
 	}
 	
@@ -171,6 +180,15 @@ public class ConfigActivity extends Activity {
 	}
 	
 	class ScriptUpdater implements Callback{
+		
+		HttpAgent scriptdHttpAgent;
+		
+		ScriptUpdater(Context context){
+			scriptdHttpAgent = new HttpAgent(context);
+		}
+		void fetch(String url){
+			scriptdHttpAgent.fetch(url,this,"loading script list");			
+		}
 
 		@Override
 		public void ok(String jsonData) {
@@ -197,6 +215,15 @@ public class ConfigActivity extends Activity {
 	}
 	
 	class BillboardUpdater implements Callback{
+		
+		HttpAgent billboardHttpAgent;
+		
+		BillboardUpdater(Context context){
+			billboardHttpAgent = new HttpAgent(context);
+		}
+		void fetch(String url){
+			billboardHttpAgent.fetch(url,this,"loading billboard");			
+		}
 
 		@Override
 		public void ok(String jsonData) {
@@ -204,9 +231,11 @@ public class ConfigActivity extends Activity {
 			try {
 				JSONObject billboardItems = new JSONObject(jsonData);
 				scriptsUrl = billboardItems.getString("scripts");
-				updateScriptThingie();
+				updateScriptList();
 			
 			} catch (Exception e){
+				String msg = e.getMessage();
+				System.out.println(msg);
 				throw new RuntimeException(e);
 			}		
 		}

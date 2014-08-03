@@ -17,31 +17,32 @@ import android.os.AsyncTask;
 
 public class HttpAgent {
 	
-	class FileFetcher implements Callback{
-		
-		final String name;
-		final String path;
-		FileFetcher(String name, String path){
-			this.name = name;
-			this.path = path;			
-		}
-
-		@Override
-		public void ok(String text) {
-			Util.getInstance().guaranteeTextFile(name, path, text);				
-		}
-
-		@Override
-		public void fail(String s) {
-			throw new RuntimeException("fail called with " +s);			
-		}	
-	}
+//	class FileFetcher implements Callback{
+//		
+//		final String name;
+//		final String path;
+//		FileFetcher(String name, String path){
+//			this.name = name;
+//			this.path = path;			
+//		}
+//
+//		@Override
+//		public void ok(String text) {
+//			Util.getInstance().guaranteeTextFile(name, path, text);				
+//		}
+//
+//		@Override
+//		public void fail(String s) {
+//			throw new RuntimeException("fail called with " +s);			
+//		}	
+//	}
 
 		String url;
 		Context context;
 		String payload;
 		String message;
 		Callback resultAgent;
+		HttpAsychTask task;
 		
 		String name(String url){
 			String[] parts  = url.split("/");
@@ -50,25 +51,25 @@ public class HttpAgent {
 
 		HttpAgent(Context context) {
 			this.context = context;
+			task = new HttpAsychTask();
 		}
 
 		void fetch(String url, Callback resultAgent, String message) {
 			this.url = url;
 			this.resultAgent = resultAgent;
 			this.message = message;
-			HttpAsychTask task = new HttpAsychTask();
 			task.execute();
 		}
 		
-		String fetchFile(String url, String path) {
-			String fileName = name(url);
-			resultAgent = new FileFetcher(fileName,path);
-			this.url = url;
-			this.message = "Fetchinf file " + url;
-			HttpAsychTask task = new HttpAsychTask();
-			task.execute();
-			return fileName;
-		}
+//		String fetchFile(String url, String path) {
+//			String fileName = name(url);
+//			resultAgent = new FileFetcher(fileName,path);
+//			this.url = url;
+//			this.message = "Fetchinf file " + url;
+//			HttpAsychTask task = new HttpAsychTask();
+//			task.execute();
+//			return fileName;
+//		}
 
 		public class HttpAsychTask extends AsyncTask<Void, Void, Void> {
 
@@ -76,10 +77,10 @@ public class HttpAgent {
 
 			@Override
 			protected void onPreExecute() {
+				super.onPreExecute();
 				dialog = new ProgressDialog(context);
 				dialog.setTitle(message);
-				dialog.show();
-				super.onPreExecute();
+				dialog.show();				
 			}
 
 			@Override
