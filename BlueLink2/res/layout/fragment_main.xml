@@ -31,25 +31,25 @@
 	            android:id="@+id/btn_setState"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
-	            android:onClick="onClickSetState"
-	            android:text="SetState"
+	            android:onClick="onClickReconnect"
+	            android:text="Relink"
 	            android:textSize="20sp" />
 	        
 	        <Button
-	            android:id="@+id/btn_bar"
+	            android:id="@+id/btn_reSynchServer"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
-	            android:onClick="onClickExec"
-	            android:text="Bar"
+	            android:onClick="onClickReSynchServer"
+	            android:text="Sync"
 	            android:textSize="20sp" />
 	
 		    <TextView
-		        android:id="@+id/statusViewState"
+		        android:id="@+id/txt_selectedScript"
 		        android:layout_width="fill_parent"
 		        android:layout_height="wrap_content"
 		        android:autoText="false"
 		        android:gravity="left"
-                android:text="View state"
+                android:text="None"
 		        android:textSize="20sp" />
 	        
 	    </LinearLayout>        

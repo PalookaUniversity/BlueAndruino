@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -56,18 +57,18 @@ public class ConfigActivity extends Activity {
 
 	void initialize(){
 
-		//debugText = (EditText)findViewById(R.id.debugDisplay);
 		context = this;
 		config = Config.getInstance();
-		
+				
 		billboardUpdater = new BillboardUpdater();
 		billboardHttpAgent = new HttpAgent(context);
+		
+		buttonRunScript = (Button)findViewById(R.id.btn_run_script);
 		
 		scriptUpdater = new ScriptUpdater();
 		scriptListSpinner = (Spinner) findViewById( R.id.ScriptSpinner );  	    
 		scriptListAdapter = new ArrayAdapter<String>(this, R.layout.simplerow, scriptList);  
 		scriptListSpinner.setAdapter( scriptListAdapter );   
-//		scriptHttpAgent = new HttpAgent(context);
 		
 		textEditServerAddress = (EditText) this.findViewById(R.id.textEditServerAddress);
 		textEditServerAddress.setText(Config.getInstance().serverUrl);		
@@ -83,7 +84,6 @@ public class ConfigActivity extends Activity {
     	Intent configIntent = new Intent(ConfigActivity.this,ExecActivity.class);
     	startActivity(configIntent);
     	finish();
-//		debugText.setText(result);
 	}
 	
 	public void btLinkStatePressed(View view){
@@ -96,8 +96,14 @@ public class ConfigActivity extends Activity {
 		
 
 		String serverUrl = textEditServerAddress.getText().toString();
+		Button buttonReSyncServer = (Button)findViewById(R.id.btn_reSynchServer);
 		if (!serverUrl.startsWith("http://")){
-			serverUrl = "http://" + serverUrl;	
+			serverUrl = "http://" + serverUrl;		buttonReSyncServer = (Button)findViewById(R.id.btn_reSynchServer);
+			
+			serverUrl = Config.getInstance().getParam(Config.TEST_SERVER, "");
+			if (!serverUrl.equals("")){
+				buttonReSyncServer.setEnabled(true);
+			}	
 		}
 //		serverUrl = "http://192.168.1.666:8000";
 		String result = "Fetch Billboard pressed<"+serverUrl+">";
@@ -211,6 +217,8 @@ public class ConfigActivity extends Activity {
 		}	
 	}
 	
+	Button buttonRunScript;
+	
 	class ScriptLoader implements Callback{
 		
 		final HttpAgent httpAgent;	
@@ -226,6 +234,10 @@ public class ConfigActivity extends Activity {
 			String[] parts = url.split("/");
 			scriptName = parts[parts.length - 1];
 			httpAgent.fetch(url,this,"loading script " + url);
+						
+			String scriptUrl = config.getParam(Config.CURRENT_SCRIPT_URL, Config.NONE);
+			buttonRunScript.setEnabled(!(Config.NONE == scriptUrl));
+			
 		}
 
 		@Override

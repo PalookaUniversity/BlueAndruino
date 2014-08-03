@@ -2,18 +2,14 @@ package com.palookaville.bluelink;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Set;
 import java.util.UUID;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Fragment;
-import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -54,15 +50,29 @@ public class ExecActivity extends Activity {
     EditText editTextCommand;
     ActionBar actionBar;
     
+	String serverUrl = "";
+    
     Button buttonSetState;
+    Button buttonReSyncServer;
+    
+    Button buttonExec;
+    Button buttonAdd;
+    Button buttonRunScript;
+    Button buttonCheck;
+    
+    TextView selectedScript;
+    
+    Config config;
+    String scriptUrl;
     
     private byte[] latencyData = "measure latency for this message".getBytes();
     byte[] readData = new byte[latencyData.length];
     private BluetoothSocket socket;
     BTLink btLink;
-    
-    
 
+	private ArrayList<BluetoothDevice> btDevices;
+	BluetoothDevice btDevice;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,12 +99,34 @@ public class ExecActivity extends Activity {
 	}
 	
 	private void init(){
-		Config.getInstance().startup(this);
+		config = Config.getInstance();
+		config.startup(this);
 		textViewStatus = (TextView) findViewById(R.id.statusView);
 		textViewDisplay = (TextView) findViewById(R.id.outputView);
 		textViewDisplay.setMovementMethod(new ScrollingMovementMethod());
 		editTextCommand = (EditText)findViewById(R.id.edit_text_cmd);
+		
+		
 		buttonSetState = (Button)findViewById(R.id.btn_setState);
+		buttonReSyncServer = (Button)findViewById(R.id.btn_reSynchServer);
+		
+		buttonExec = (Button)findViewById(R.id.btn_exec);
+		
+		
+		serverUrl = config.getParam(Config.TEST_SERVER, Config.NONE);
+		buttonReSyncServer.setEnabled(!(Config.NONE == serverUrl));
+
+		selectedScript = (TextView)findViewById(R.id.txt_selectedScript);
+		
+		buttonRunScript = (Button)findViewById(R.id.btn_run_script);
+		btDevice = btLink.previousBtDevice(this);
+		
+		scriptUrl = config.getParam(Config.CURRENT_SCRIPT_URL, Config.NONE);		
+		selectedScript.setText(scriptUrl);
+		
+		buttonRunScript.setEnabled((btDevice != null) && (scriptUrl != Config.NONE));
+		btLink.setToConnect(btDevice);
+				
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		
 	}
@@ -205,14 +237,23 @@ public class ExecActivity extends Activity {
 		btLink.postMessageout("3");
     }
     
-    public void onClickSetState(View v) {
+    public void onClickReconnect(View v) {
+    	buttonSetState.setEnabled(false);
+    	String stat = "Reconnected";
+		Toast.makeText(getApplicationContext(), stat, Toast.LENGTH_SHORT).show();
+    }
+    
+    public void onClickReSynchServer(View v) {
     	buttonSetState.setText("Boom");
-    	String stat = "Set State pushed";
+    	String stat = "Resynched";
 		Toast.makeText(getApplicationContext(), stat, Toast.LENGTH_SHORT).show();
     }
     
     public void onClickExec(View v) {
     	String cmd = editTextCommand.getText().toString();
+        if (!btLink.isActive()){
+      	  btLink.activate(this);
+        }
     	btLink.postMessageout(cmd);
     	String stat = "Exec<"+cmd+">";
     	textViewStatus.setText(stat);
@@ -232,6 +273,9 @@ public class ExecActivity extends Activity {
     
     public void onClickRunScript(View v) {
       String scriptText = Config.getInstance().getScriptText();
+      if (!btLink.isActive()){
+    	  btLink.activate(this);
+      }
       btLink.postMessageout(scriptText);
   	  String stat = "Run Script";
   	  textViewStatus.setText(stat);
@@ -337,5 +381,45 @@ public class ExecActivity extends Activity {
             }
         });
     }	
+    
+    
+	class ScriptLoader implements Callback{
+		
+		final HttpAgent httpAgent;	
+		String scriptName;
+		public String getScriptName() { return scriptName; }
+		public void setScriptName(String scriptName) { this.scriptName = scriptName; }
+		
+		ScriptLoader(Context context){
+			httpAgent = new HttpAgent(context);			
+		}
+		
+		void fetch(String url){
+			String[] parts = url.split("/");
+			scriptName = parts[parts.length - 1];
+			httpAgent.fetch(url,this,"loading script " + url);
+			
+			
+			String scriptUrl = config.getParam(Config.CURRENT_SCRIPT_URL, Config.NONE);
+			buttonRunScript.setEnabled(!(Config.NONE == scriptUrl));
+			
+			selectedScript.setText(scriptUrl);
+		}
+
+		@Override
+		public void ok(String text) {
+			
+			Util.getInstance().guaranteeTextFile(scriptName, Config.SCRIPT_DIRPATH, text);
+		    String data = Util.getInstance().getTextFile(scriptName, Config.SCRIPT_DIRPATH);
+		    // TODO: remove self test when stable
+		    assert(text.trim().equals(data.trim()));		    
+		    config.setScriptText(text);
+		}
+
+		@Override
+		public void fail(String s) {
+			throw new RuntimeException("fail called with " +s);			
+		}	
+	}
 
 }

@@ -14,6 +14,7 @@ import android.preference.PreferenceManager;
 
 class Config {
 	
+	public static final String NONE = "None";
 	public static final String TEST_SERVER = "TestServer";
 	public static final String SCRIPT_PATH = "ScriptPath";
 	public static final String SCRIPT_DIRPATH = "scripts";

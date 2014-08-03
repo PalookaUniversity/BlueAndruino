@@ -22,13 +22,16 @@ public class BTLink  {
 
 	private static final UUID SECURE_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 	public static String BT_ADDRESS = "BT_ADDRESS";
-	public static String NON_SELECTED = "none selected";
+	public static String NONE_SELECTED = "none selected";
 
 	BluetoothSocket socket;
 	ExecActivity activity;
 	BluetoothDevice device;
-    String btAddress = NON_SELECTED;
+    String btAddress = NONE_SELECTED;
     String getBtAddress(){ return btAddress; }
+    
+    Boolean activated = false;
+    Boolean isActive(){    	return activated;    }
     
 
 	private BluetoothDevice toConnect;
@@ -51,7 +54,7 @@ public class BTLink  {
 
 	public void setToConnect(BluetoothDevice toConnect) {  
 		this.toConnect = toConnect; 		
-		btAddress = (toConnect == null) ? NON_SELECTED : toConnect.getAddress();
+		btAddress = (toConnect == null) ? NONE_SELECTED : toConnect.getAddress();
 		Config.getInstance().setParam(BT_ADDRESS, btAddress);
 	}
 	
@@ -89,6 +92,7 @@ public class BTLink  {
 		}
 		writer.start();
 		reader.start();
+		activated = true;
 		System.out.println("Reader and writer started.");
 	}
 
@@ -152,6 +156,22 @@ public class BTLink  {
         	deviceSet = bluetoothAdapter.getBondedDevices();
         }
         return new ArrayList<BluetoothDevice>(deviceSet);
+    }
+    
+    public BluetoothDevice previousBtDevice(Activity ac){
+    	BluetoothDevice btDevice = null;
+    	btAddress = Config.getInstance().getParam(BTLink.BT_ADDRESS, Config.NONE);
+    	final ArrayList<BluetoothDevice> deviceList = getBluetoothDevices();
+        if (deviceList == null) {
+        	Toast.makeText(ac.getApplicationContext(), "No device list", Toast.LENGTH_LONG).show();
+        } else {
+    		for(BluetoothDevice bt: deviceList){
+    			if (bt.getAddress().equals(btAddress)){
+    				btDevice = bt;
+    			}
+    		}
+        }
+    	return btDevice;
     }
 	
 	void pair(Activity ac){
