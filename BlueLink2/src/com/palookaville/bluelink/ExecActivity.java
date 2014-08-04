@@ -46,7 +46,7 @@ public class ExecActivity extends Activity {
     private static final UUID SECURE_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
       
     TextView textViewStatus;
-    TextView textViewDisplay;
+    TextView textOutputView;
     EditText editTextCommand;
     ActionBar actionBar;
     
@@ -102,11 +102,21 @@ public class ExecActivity extends Activity {
 		config = Config.getInstance();
 		config.startup(this);
 		textViewStatus = (TextView) findViewById(R.id.statusView);
-		textViewDisplay = (TextView) findViewById(R.id.outputView);
-		textViewDisplay.setMovementMethod(new ScrollingMovementMethod());
+		textViewStatus.setText("Field statusView");
+		
+		textOutputView = (TextView) findViewById(R.id.outputView);
+		textOutputView.setMovementMethod(new ScrollingMovementMethod());
+		
+		String t1 = "Field outputView";
+		textOutputView.setText(t1);
+		String t2 = textOutputView.getText().toString();
+		Boolean matched = t1.equals(t2);
+		System.out.println(matched);
+		
+		
 		editTextCommand = (EditText)findViewById(R.id.edit_text_cmd);
 		
-		
+				
 		buttonSetState = (Button)findViewById(R.id.btn_setState);
 		buttonReSyncServer = (Button)findViewById(R.id.btn_reSynchServer);
 		
@@ -166,7 +176,7 @@ public class ExecActivity extends Activity {
     		btLink.activate(this); 
         	break;
         case R.id.action_clear: 
-    		textViewDisplay.setText(""); 
+    		textOutputView.setText(""); 
         	break;
         case R.id.action_config:
         	Config.instance.setMode("Config");
@@ -268,11 +278,17 @@ public class ExecActivity extends Activity {
     public void onClickCheck(View v) {
 		Editable txt = editTextCommand.getText();
 		String diagnostic = "<" + txt.toString().trim() + ">";
-		textViewStatus.setText("Check:"+diagnostic); 
+		textViewStatus.setText("Check:"+diagnostic);
+		textOutputView.append("\nCheck:"+diagnostic);
+		//textOutputView.setText("Check:"+diagnostic);
     }
     
     public void onClickRunScript(View v) {
       String scriptText = Config.getInstance().getScriptText();
+      if (scriptText.equals("")){
+    	  textOutputView.append("\nScript text empty");
+    	  return;
+      }
       if (!btLink.isActive()){
     	  btLink.activate(this);
       }
@@ -355,7 +371,7 @@ public class ExecActivity extends Activity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                textViewDisplay.append(msg + "\n");
+                textOutputView.append(msg + "\n");
                                 
 //                int scroll_amount = textViewDisplay.getBottom();
 //

@@ -70,8 +70,10 @@ public class ConfigActivity extends Activity {
 		scriptListAdapter = new ArrayAdapter<String>(this, R.layout.simplerow, scriptList);  
 		scriptListSpinner.setAdapter( scriptListAdapter );   
 		
+		String serverUrl = config.getParam(Config.TEST_SERVER, "");	
 		textEditServerAddress = (EditText) this.findViewById(R.id.textEditServerAddress);
-		textEditServerAddress.setText(Config.getInstance().serverUrl);		
+		textEditServerAddress.setText(serverUrl);
+		
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 	}
 	
@@ -93,7 +95,7 @@ public class ConfigActivity extends Activity {
 	
 	private String canonicalServerUrl(){
 		String serverUrl = textEditServerAddress.getText().toString();
-		String canonicalUrl = "";
+		String canonicalUrl = serverUrl;
 		if (!"".equals(serverUrl)){
 			if (!serverUrl.startsWith("http://")){
 				canonicalUrl = "http://"+serverUrl;
@@ -165,7 +167,7 @@ public class ConfigActivity extends Activity {
 		scriptLoader.fetch(scriptUrl);
 		System.out.println(result);
 		
-		Toast.makeText(getApplicationContext(), "Load Script " + scriptUrl, Toast.LENGTH_LONG).show();
+		Toast.makeText(getApplicationContext(),result, Toast.LENGTH_LONG).show();
 		//Config.getInstance().btLink.init();
 		//Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
 		//debugText.setText(result);
@@ -262,11 +264,7 @@ public class ConfigActivity extends Activity {
 		void fetch(String url){
 			String[] parts = url.split("/");
 			scriptName = parts[parts.length - 1];
-			httpAgent.fetch(url,this,"loading script " + url);
-						
-			String scriptUrl = config.getParam(Config.CURRENT_SCRIPT_URL, Config.NONE);
-			buttonRunScript.setEnabled(!(Config.NONE == scriptUrl));
-			
+			httpAgent.fetch(url,this,"loading script " + url);			
 		}
 
 		@Override
