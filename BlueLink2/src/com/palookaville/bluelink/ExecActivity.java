@@ -2,7 +2,13 @@ package com.palookaville.bluelink;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import com.palookaville.bluelink.ConfigActivity.BillboardUpdater;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -21,8 +27,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,10 +59,26 @@ public class ExecActivity extends Activity {
     ActionBar actionBar;
     
 	String serverUrl = "";
+		
+	HttpAgent billboardHttpAgent;
+	HttpAgent scriptHttpAgent;
+	String scriptsUrl = "";
+	
+	ScriptLoader scriptLoader;
+	
+    EditText textEditServerAddress;
+    //String serverAddress;
+
+    BillboardUpdater billboardUpdater;
     
-    Button buttonSetState;
     Button buttonReSyncServer;
-    
+	
+	Spinner scriptListSpinner ;  
+	ArrayAdapter<String> scriptListAdapter ;
+	List<String>scriptList = new ArrayList<String>();
+	ScriptUpdater scriptUpdater;
+	Context context;
+      
     Button buttonExec;
     Button buttonAdd;
     Button buttonRunScript;
@@ -102,7 +126,7 @@ public class ExecActivity extends Activity {
 		config = Config.getInstance();
 		config.startup(this);
 		textViewStatus = (TextView) findViewById(R.id.statusView);
-		textViewStatus.setText("Field statusView");
+		textViewStatus.setText(" init");
 		
 		textOutputView = (TextView) findViewById(R.id.outputView);
 		textOutputView.setMovementMethod(new ScrollingMovementMethod());
@@ -117,14 +141,11 @@ public class ExecActivity extends Activity {
 		editTextCommand = (EditText)findViewById(R.id.edit_text_cmd);
 		
 				
-		buttonSetState = (Button)findViewById(R.id.btn_setState);
-		buttonReSyncServer = (Button)findViewById(R.id.btn_reSynchServer);
 		
 		buttonExec = (Button)findViewById(R.id.btn_exec);
 		
 		
 		serverUrl = config.getParam(Config.TEST_SERVER, Config.NONE);
-		buttonReSyncServer.setEnabled(!(Config.NONE == serverUrl));
 
 		selectedScript = (TextView)findViewById(R.id.txt_selectedScript);
 		
@@ -132,6 +153,7 @@ public class ExecActivity extends Activity {
 		btDevice = btLink.previousBtDevice(this);
 		
 		scriptUrl = config.getParam(Config.CURRENT_SCRIPT_URL, Config.NONE);		
+		scriptListAdapter = new ArrayAdapter<String>(this, R.layout.simplerow, scriptList);  
 		selectedScript.setText(scriptUrl);
 		
 		buttonRunScript.setEnabled((btDevice != null) && (scriptUrl != Config.NONE));
@@ -178,6 +200,20 @@ public class ExecActivity extends Activity {
         case R.id.action_clear: 
     		textOutputView.setText(""); 
         	break;
+        	
+        case R.id.action_server_sync: 
+        	
+    		String serverUrl = config.getParam(Config.TEST_SERVER, "");;
+    		if (!"".equals(serverUrl)){
+        		billboardUpdater = new BillboardUpdater(this);
+        		billboardUpdater.fetch(serverUrl);
+        		String result = "Fetch Billboard pressed<"+serverUrl+">";
+        		Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
+    		} else {
+    			Toast.makeText(getApplicationContext(), "No server URL", Toast.LENGTH_LONG).show();
+    		}
+        	break;
+        	
         case R.id.action_config:
         	Config.instance.setMode("Config");
         	Toast.makeText(getApplicationContext(), "Config mode", Toast.LENGTH_SHORT).show();
@@ -199,11 +235,6 @@ public class ExecActivity extends Activity {
             finish();
         	break;
         }
-
-        
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -245,18 +276,6 @@ public class ExecActivity extends Activity {
     public void onSend3Click(View v) {
 //		Toast.makeText(getApplicationContext(), "onSend3Click", Toast.LENGTH_LONG).show();
 		btLink.postMessageout("3");
-    }
-    
-    public void onClickReconnect(View v) {
-    	buttonSetState.setEnabled(false);
-    	String stat = "Reconnected";
-		Toast.makeText(getApplicationContext(), stat, Toast.LENGTH_SHORT).show();
-    }
-    
-    public void onClickReSynchServer(View v) {
-    	buttonSetState.setText("Boom");
-    	String stat = "Resynched";
-		Toast.makeText(getApplicationContext(), stat, Toast.LENGTH_SHORT).show();
     }
     
     public void onClickExec(View v) {
@@ -383,6 +402,13 @@ public class ExecActivity extends Activity {
             }
         });
     }
+    
+	void updateScriptList(){
+
+		scriptUpdater = new ScriptUpdater(this);
+		scriptUpdater.fetch(scriptsUrl);
+		Toast.makeText(getApplicationContext(), "load scripts", Toast.LENGTH_LONG).show();
+	}
 
 
     void debug(String msg) {
@@ -430,6 +456,73 @@ public class ExecActivity extends Activity {
 		    // TODO: remove self test when stable
 		    assert(text.trim().equals(data.trim()));		    
 		    config.setScriptText(text);
+		}
+
+		@Override
+		public void fail(String s) {
+			throw new RuntimeException("fail called with " +s);			
+		}	
+	}
+	
+	class ScriptUpdater implements Callback{
+		
+		HttpAgent scriptdHttpAgent;
+		
+		ScriptUpdater(Context context){
+			scriptdHttpAgent = new HttpAgent(context);
+		}
+		void fetch(String url){
+			scriptdHttpAgent.fetch(url,this,"loading script list");			
+		}
+
+		@Override
+		public void ok(String jsonData) {
+			scriptList = new ArrayList<String>();
+			try {
+				JSONArray scriptItems = new JSONArray(jsonData);
+				for(int i =0; i<scriptItems.length(); i++){
+					String scriptUrl = scriptItems.getString(i);
+					scriptList.add(scriptUrl);
+					
+				}
+				scriptListAdapter.clear();
+				scriptListAdapter.addAll(scriptList);
+				scriptListAdapter.notifyDataSetChanged();				
+			} catch (Exception e){
+				throw new RuntimeException(e);
+			}		
+		}
+
+		@Override
+		public void fail(String s) {
+			throw new RuntimeException("fail called with " +s);			
+		}	
+	}
+	
+	class BillboardUpdater implements Callback{
+		
+		HttpAgent billboardHttpAgent;
+		
+		BillboardUpdater(Context context){
+			billboardHttpAgent = new HttpAgent(context);
+		}
+		void fetch(String url){
+			billboardHttpAgent.fetch(url,this,"loading billboard");			
+		}
+
+		@Override
+		public void ok(String jsonData) {
+			//scriptList = new ArrayList<String>();
+			try {
+				JSONObject billboardItems = new JSONObject(jsonData);
+				scriptsUrl = billboardItems.getString("scripts");
+				updateScriptList();
+			
+			} catch (Exception e){
+				String msg = e.getMessage();
+				System.out.println(msg);
+				throw new RuntimeException(e);
+			}		
 		}
 
 		@Override

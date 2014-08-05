@@ -8,28 +8,33 @@
         android:showAsAction="ifRoom"
         android:title="Clear"/>
     <item
-        android:id="@+id/action_pair"
+        android:id="@+id/action_server_sync"
         android:orderInCategory="110"
+        android:showAsAction="ifRoom"
+        android:title="server sync"/>
+    <item
+        android:id="@+id/action_pair"
+        android:orderInCategory="120"
         android:showAsAction="ifRoom"
         android:title="pair"/>
     <item
         android:id="@+id/action_link"
-        android:orderInCategory="120"
+        android:orderInCategory="130"
         android:showAsAction="ifRoom"
         android:title="Link"/>
     <item
         android:id="@+id/action_status"
-        android:orderInCategory="130"
+        android:orderInCategory="140"
         android:showAsAction="ifRoom"
         android:title="Status"/>
     <item
         android:id="@+id/action_quit"
-        android:orderInCategory="140"
+        android:orderInCategory="150"
         android:showAsAction="ifRoom"
         android:title="Quit"/>
     <item
         android:id="@+id/action_config"
-        android:orderInCategory="150"
+        android:orderInCategory="160"
         android:showAsAction="never"
         android:title="Config mode"/>
     <item

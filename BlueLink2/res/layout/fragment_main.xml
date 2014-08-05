@@ -1,157 +1,123 @@
-<RelativeLayout xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_alignParentBottom="true"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.palookaville.bluelink.MainActivity$PlaceholderFragment" xmlns:android="http://schemas.android.com/apk/res/android">
-    
-    <RelativeLayout
-        android:id="@+id/block_control_panel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:paddingBottom="1dp"
-        android:paddingLeft="1dp"
-        android:paddingRight="1dp"
-        android:paddingTop="1dp" >
-        
-        
-	    <LinearLayout
-	        android:id="@+id/block_config_panel"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:paddingBottom="1dp"
-	        android:paddingLeft="1dp"
-	        android:paddingRight="1dp"
-	        android:paddingTop="1dp" >
-	        	
-	        <Button
-	            android:id="@+id/btn_setState"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:onClick="onClickReconnect"
-	            android:text="Relink"
-	            android:textSize="20sp" />
-	        
-	        <Button
-	            android:id="@+id/btn_reSynchServer"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:onClick="onClickReSynchServer"
-	            android:text="Sync"
-	            android:textSize="20sp" />
-	
-		    <TextView
-		        android:id="@+id/txt_selectedScript"
-		        android:layout_width="fill_parent"
-		        android:layout_height="wrap_content"
-		        android:autoText="false"
-		        android:gravity="left"
-                android:text="None"
-		        android:textSize="20sp" />
-	        
-	    </LinearLayout>  
-	    
+    tools:context="com.palookaville.bluelink.MainActivity$PlaceholderFragment" >
 
-	    
-	    <ScrollView
-	    android:id="@+id/SCROLLER_ID"
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:layout_below="@id/block_config_panel"
-	    android:scrollbars="vertical"
-	    android:fillViewport="true">
-
-	    <TextView
-	        android:id="@+id/outputView"
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:autoText="false"
-	        android:gravity="left"
-	        android:text="Init: outputView"
-	        android:textSize="20sp" />
-
-    </ScrollView>
-	    
-	    
-        
-	    <RelativeLayout
-	        android:id="@+id/block_cmd_panel"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_alignParentBottom="true"
-	        android:paddingBottom="1dp"
-	        android:paddingLeft="1dp"
-	        android:paddingRight="1dp"
-	        android:paddingTop="1dp" >
-	        	
-	        <Button
-	            android:id="@+id/btn_exec"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:onClick="onClickExec"
-	            android:text="Exec"
-	            android:textSize="20sp" />
-	
-	        <Button
-	            android:id="@+id/btn_add"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_toRightOf="@+id/btn_exec"
-	            android:onClick="onClickAdd"
-	            android:text="Add"
-	            android:textSize="20sp" />
-	        
-	        <Button
-	            android:id="@+id/btn_run_script"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_toRightOf="@+id/btn_add"
-	            android:onClick="onClickRunScript"
-	            android:text="Run Script"
-	            android:textSize="20sp" />
-	        
-	        <Button
-	            android:id="@+id/btn_chk"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_toRightOf="@+id/btn_run_script"
-	            android:onClick="onClickCheck"
-	            android:text="Check"
-	            android:textSize="20sp" />
-	
-	        <EditText
-	            android:id="@+id/edit_text_cmd"
-	            android:layout_width="fill_parent"
-	            android:layout_height="wrap_content"
-	            android:layout_toRightOf="@+id/btn_chk"
-	            android:text="" 
-	            />
-	        
-	    </RelativeLayout>
-        
-        
-    </RelativeLayout>
-    
     <TextView
         android:id="@+id/statusView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/block_control_panel"
-        android:autoText="false"
-        android:gravity="center"
-        android:text="Init: statusView"
+        android:text=""
         android:textSize="20sp" />
+
+    <LinearLayout
+        android:id="@+id/block_config_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="1dp"
+        android:paddingLeft="1dp"
+        android:paddingRight="1dp"
+        android:paddingTop="1dp" >
+
+        <Button
+            android:id="@+id/btn_run_script"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onClickRunScript"
+            android:text="Run Script"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/txt_selectedScript"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:autoText="false"
+            android:gravity="left"
+            android:text="None"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/block_config_panel0"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="1dp"
+        android:paddingLeft="1dp"
+        android:paddingRight="1dp"
+        android:paddingTop="1dp" >
+
+        <Button
+            android:id="@+id/btn_exec"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onClickExec"
+            android:text="Exec"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/edit_text_cmd"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="" />
+    </LinearLayout>
 
     <View
         android:id="@+id/div1"
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:layout_above="@id/statusView"
         android:background="@android:color/darker_gray" />
-    
 
+    <ScrollView
+        android:id="@+id/scrollerId"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:fillViewport="true"
+        android:scrollbars="vertical" >
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/outputView"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:autoText="false"
+            android:gravity="left"
+            android:text="Init: outputView"
+            android:textSize="20sp" />
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/block_cmd_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="1dp"
+        android:paddingLeft="1dp"
+        android:paddingRight="1dp"
+        android:paddingTop="1dp" >
+
+        <Button
+            android:id="@+id/btn_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onClickAdd"
+            android:text="Add"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/btn_chk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onClickCheck"
+            android:text="Check"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+</LinearLayout>

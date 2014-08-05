@@ -44,9 +44,7 @@ public class ConfigActivity extends Activity {
 	Context context;
 	
 	
-	public String SCRIPT_URL = "http://192.168.1.66.com:8000/scripts";
-	public String ELECTION_URL = "http://votecastomatic.com/elections";
-	public String VOTER_URL = "http://votecastomatic.com/voters";
+//	public String SCRIPT_URL = "http://192.168.1.66.com:8000/scripts";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
