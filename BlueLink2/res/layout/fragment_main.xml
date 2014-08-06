@@ -35,14 +35,11 @@
             android:text="Run Script"
             android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/txt_selectedScript"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:autoText="false"
-            android:gravity="left"
-            android:text="None"
-            android:textSize="20sp" />
+
+     <Spinner
+        android:id="@+id/ScriptListSpinner"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
     </LinearLayout>
 
     <LinearLayout

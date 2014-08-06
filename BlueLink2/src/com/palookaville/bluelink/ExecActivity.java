@@ -83,9 +83,7 @@ public class ExecActivity extends Activity {
     Button buttonAdd;
     Button buttonRunScript;
     Button buttonCheck;
-    
-    TextView selectedScript;
-    
+        
     Config config;
     String scriptUrl;
     
@@ -146,15 +144,16 @@ public class ExecActivity extends Activity {
 		
 		
 		serverUrl = config.getParam(Config.TEST_SERVER, Config.NONE);
-
-		selectedScript = (TextView)findViewById(R.id.txt_selectedScript);
 		
 		buttonRunScript = (Button)findViewById(R.id.btn_run_script);
 		btDevice = btLink.previousBtDevice(this);
 		
 		scriptUrl = config.getParam(Config.CURRENT_SCRIPT_URL, Config.NONE);		
 		scriptListAdapter = new ArrayAdapter<String>(this, R.layout.simplerow, scriptList);  
-		selectedScript.setText(scriptUrl);
+		
+		scriptListSpinner = (Spinner) findViewById( R.id.ScriptListSpinner );  	    
+		scriptListAdapter = new ArrayAdapter<String>(this, R.layout.simplerow, scriptList);  
+		scriptListSpinner.setAdapter( scriptListAdapter );   
 		
 		buttonRunScript.setEnabled((btDevice != null) && (scriptUrl != Config.NONE));
 		btLink.setToConnect(btDevice);
@@ -440,12 +439,9 @@ public class ExecActivity extends Activity {
 			String[] parts = url.split("/");
 			scriptName = parts[parts.length - 1];
 			httpAgent.fetch(url,this,"loading script " + url);
-			
-			
+						
 			String scriptUrl = config.getParam(Config.CURRENT_SCRIPT_URL, Config.NONE);
-			buttonRunScript.setEnabled(!(Config.NONE == scriptUrl));
-			
-			selectedScript.setText(scriptUrl);
+			buttonRunScript.setEnabled(!(Config.NONE == scriptUrl));			
 		}
 
 		@Override
