@@ -8,8 +8,6 @@ import java.util.UUID;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.palookaville.bluelink.ConfigActivity.BillboardUpdater;
-
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
@@ -35,15 +33,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 /**********************************************************************
- * 
- * TODO:
- *   Modify blink mode:
- *   -- Send message mod:  Blink rate roller, Send button.
- *   Add command builder
- *   -- Init command (clear)
- *   -- Roller for register, field for value, "add" button
- *   -- "Send message"
- *   Foo Bar Baz
  * 
  * @author gvamos
  *
@@ -301,6 +290,18 @@ public class ExecActivity extends Activity {
 		//textOutputView.setText("Check:"+diagnostic);
     }
     
+    public void onClickLoadScript(View v) {
+    	
+      scriptUrl = (String) scriptListSpinner.getSelectedItem();
+      
+      if (scriptUrl == null || scriptUrl.equals("")){
+    	  Toast.makeText(getApplicationContext(), "Error: No script selected", Toast.LENGTH_LONG).show();
+    	  return;
+      }
+      ScriptLoader scriptLoader = new ScriptLoader(this);
+      scriptLoader.fetch(scriptUrl);
+      }
+    
     public void onClickRunScript(View v) {
       String scriptText = Config.getInstance().getScriptText();
       if (scriptText.equals("")){
@@ -402,6 +403,38 @@ public class ExecActivity extends Activity {
         });
     }
     
+    
+	class BillboardUpdater implements Callback{
+		
+		HttpAgent billboardHttpAgent;
+		
+		BillboardUpdater(Context context){
+			billboardHttpAgent = new HttpAgent(context);
+		}
+		void fetch(String url){
+			billboardHttpAgent.fetch(url,this,"loading billboard");			
+		}
+
+		@Override
+		public void ok(String jsonData) {
+			//scriptList = new ArrayList<String>();
+			try {
+				JSONObject billboardItems = new JSONObject(jsonData);
+				scriptsUrl = billboardItems.getString("scripts");
+				updateScriptList();
+			
+			} catch (Exception e){
+				String msg = e.getMessage();
+				System.out.println(msg);
+				throw new RuntimeException(e);
+			}		
+		}
+
+		@Override
+		public void fail(String s) {
+			throw new RuntimeException("fail called with " +s);			
+		}	
+	}
 	void updateScriptList(){
 
 		scriptUpdater = new ScriptUpdater(this);
@@ -427,15 +460,18 @@ public class ExecActivity extends Activity {
 	class ScriptLoader implements Callback{
 		
 		final HttpAgent httpAgent;	
+		String url = "Uninitialized";
 		String scriptName;
 		public String getScriptName() { return scriptName; }
 		public void setScriptName(String scriptName) { this.scriptName = scriptName; }
 		
 		ScriptLoader(Context context){
-			httpAgent = new HttpAgent(context);			
+			httpAgent = new HttpAgent(context);	
+			
 		}
 		
 		void fetch(String url){
+			this.url = url;
 			String[] parts = url.split("/");
 			scriptName = parts[parts.length - 1];
 			httpAgent.fetch(url,this,"loading script " + url);
@@ -450,12 +486,14 @@ public class ExecActivity extends Activity {
 			Util.getInstance().guaranteeTextFile(scriptName, Config.SCRIPT_DIRPATH, text);
 		    String data = Util.getInstance().getTextFile(scriptName, Config.SCRIPT_DIRPATH);
 		    // TODO: remove self test when stable
+		    Toast.makeText(getApplicationContext(), "Load Script:"+url, Toast.LENGTH_LONG).show();
 		    assert(text.trim().equals(data.trim()));		    
 		    config.setScriptText(text);
 		}
 
 		@Override
 		public void fail(String s) {
+			Toast.makeText(getApplicationContext(), "Failed to load:"+url, Toast.LENGTH_LONG).show();
 			throw new RuntimeException("fail called with " +s);			
 		}	
 	}
@@ -485,38 +523,6 @@ public class ExecActivity extends Activity {
 				scriptListAdapter.addAll(scriptList);
 				scriptListAdapter.notifyDataSetChanged();				
 			} catch (Exception e){
-				throw new RuntimeException(e);
-			}		
-		}
-
-		@Override
-		public void fail(String s) {
-			throw new RuntimeException("fail called with " +s);			
-		}	
-	}
-	
-	class BillboardUpdater implements Callback{
-		
-		HttpAgent billboardHttpAgent;
-		
-		BillboardUpdater(Context context){
-			billboardHttpAgent = new HttpAgent(context);
-		}
-		void fetch(String url){
-			billboardHttpAgent.fetch(url,this,"loading billboard");			
-		}
-
-		@Override
-		public void ok(String jsonData) {
-			//scriptList = new ArrayList<String>();
-			try {
-				JSONObject billboardItems = new JSONObject(jsonData);
-				scriptsUrl = billboardItems.getString("scripts");
-				updateScriptList();
-			
-			} catch (Exception e){
-				String msg = e.getMessage();
-				System.out.println(msg);
 				throw new RuntimeException(e);
 			}		
 		}

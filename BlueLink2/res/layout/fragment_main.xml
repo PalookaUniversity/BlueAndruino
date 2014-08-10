@@ -28,11 +28,19 @@
         android:paddingTop="1dp" >
 
         <Button
+            android:id="@+id/btn_load_script"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onClickLoadScript"
+            android:text="Load"
+            android:textSize="20sp" />
+        
+        <Button
             android:id="@+id/btn_run_script"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="onClickRunScript"
-            android:text="Run Script"
+            android:text="Run"
             android:textSize="20sp" />
 
 
