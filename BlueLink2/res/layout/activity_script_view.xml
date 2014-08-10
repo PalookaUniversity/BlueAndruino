@@ -30,7 +30,7 @@
     </LinearLayout>
     
     <EditText
-            android:id="@+id/textview_sriptview"
+            android:id="@+id/textview_scriptview"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:autoText="false"

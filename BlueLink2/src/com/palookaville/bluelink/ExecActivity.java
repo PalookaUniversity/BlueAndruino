@@ -64,7 +64,6 @@ public class ExecActivity extends Activity {
 	
 	Spinner scriptListSpinner ;  
 	ArrayAdapter<String> scriptListAdapter ;
-	List<String>scriptList = new ArrayList<String>();
 	ScriptUpdater scriptUpdater;
 	Context context;
       
@@ -125,23 +124,17 @@ public class ExecActivity extends Activity {
 		System.out.println(matched);
 		
 		
-		editTextCommand = (EditText)findViewById(R.id.edit_text_cmd);
-		
-				
-		
-		buttonExec = (Button)findViewById(R.id.btn_exec);
-		
-		
+		editTextCommand = (EditText)findViewById(R.id.edit_text_cmd);		
+		buttonExec = (Button)findViewById(R.id.btn_exec);	
 		serverUrl = config.getParam(Config.TEST_SERVER, Config.NONE);
 		
 		buttonRunScript = (Button)findViewById(R.id.btn_run_script);
 		btDevice = btLink.previousBtDevice(this);
 		
 		scriptUrl = config.getParam(Config.CURRENT_SCRIPT_URL, Config.NONE);		
-		scriptListAdapter = new ArrayAdapter<String>(this, R.layout.simplerow, scriptList);  
+		scriptListAdapter = new ArrayAdapter<String>(this, R.layout.simplerow, config.scriptList);  
 		
 		scriptListSpinner = (Spinner) findViewById( R.id.ScriptListSpinner );  	    
-		scriptListAdapter = new ArrayAdapter<String>(this, R.layout.simplerow, scriptList);  
 		scriptListSpinner.setAdapter( scriptListAdapter );   
 		
 		buttonRunScript.setEnabled((btDevice != null) && (scriptUrl != Config.NONE));
@@ -303,8 +296,15 @@ public class ExecActivity extends Activity {
       }
     
     public void onClickEditScript(View v) {
-		
+    	
+        scriptUrl = (String) scriptListSpinner.getSelectedItem();
+        
+        if (scriptUrl == null || scriptUrl.equals("")){
+      	  Toast.makeText(getApplicationContext(), "Error: No script selected", Toast.LENGTH_LONG).show();
+      	  return;
+        }		
     	Intent configIntent = new Intent(ExecActivity.this,ScriptViewActivity.class);
+    	configIntent.putExtra(ScriptViewActivity.SCRIPT_URL, scriptUrl);
     	startActivity(configIntent);
 
     }
@@ -478,9 +478,8 @@ public class ExecActivity extends Activity {
 		}
 		
 		void fetch(String url){
-			this.url = url;
-			String[] parts = url.split("/");
-			scriptName = parts[parts.length - 1];
+			this.url = url;			
+			scriptName = Config.getInstance().scriptName(url);
 			httpAgent.fetch(url,this,"loading script " + url);						
 		}
 
@@ -518,16 +517,16 @@ public class ExecActivity extends Activity {
 
 		@Override
 		public void ok(String jsonData) {
-			scriptList = new ArrayList<String>();
+			config.scriptList = new ArrayList<String>();
 			try {
 				JSONArray scriptItems = new JSONArray(jsonData);
 				for(int i =0; i<scriptItems.length(); i++){
 					String scriptUrl = scriptItems.getString(i);
-					scriptList.add(scriptUrl);
+					config.scriptList.add(scriptUrl);
 					
 				}
 				scriptListAdapter.clear();
-				scriptListAdapter.addAll(scriptList);
+				scriptListAdapter.addAll(config.scriptList);
 				scriptListAdapter.notifyDataSetChanged();				
 			} catch (Exception e){
 				throw new RuntimeException(e);

@@ -3,8 +3,10 @@
  */
 package com.palookaville.bluelink;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -42,6 +44,7 @@ class Config {
 	String serverUrl = "";
 	String scriptPath = "";	
 	String scriptText = "";	
+	List<String>scriptList = new ArrayList<String>();
 	public String getScriptText() { return scriptText; }
 	void setScriptText(String s){ scriptText = s; }
 	
@@ -107,5 +110,10 @@ class Config {
 		public void fail(String s) {
 			throw new RuntimeException("fail called with " +s);			
 		}	
+	}
+	String scriptName(String scriptUrl){
+		String[] parts = scriptUrl.split("/");
+		return parts[parts.length - 1];
+		
 	}
 }

@@ -5,12 +5,26 @@ import com.palookaville.bluelink.ExecActivity.ScriptLoader;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class ScriptViewActivity extends Activity {
+
+	public static final String SCRIPT_URL = "SCRIPT_URL";
+	String scriptUrl = "Uninitialized";
+	String scriptName = "Uninitialized";
+	String scriptText = "Uninitialized";
+	
+	EditText scriptView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +49,22 @@ public class ScriptViewActivity extends Activity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	@Override
+	public void onStart(){
+	    super.onStart();
+	    init();
+
+	}
+	
+	private void init(){
+		Bundle extras = getIntent().getExtras();
+		scriptUrl = extras.getString(SCRIPT_URL);
+		scriptName = Config.getInstance().scriptName(scriptUrl);
+		scriptText = Config.getInstance().getScriptText();
+		scriptView = (EditText)findViewById(R.id.textview_scriptview);
+		scriptView.setText(scriptText);				
 	}
 	
     public void onClickScriptViewActivityReturn(View v) {
