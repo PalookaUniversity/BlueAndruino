@@ -88,6 +88,8 @@ public class BTLink  {
 			socket.connect();
 		} catch (IOException e) {
 			e.printStackTrace();
+        	Toast.makeText(activity, "BT Link failure!", Toast.LENGTH_SHORT).show();
+
 			throw new RuntimeException("Cannot generate socket",e);
 		}
 		writer.start();

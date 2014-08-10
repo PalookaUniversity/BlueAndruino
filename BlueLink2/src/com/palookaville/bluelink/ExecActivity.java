@@ -491,7 +491,10 @@ public class ExecActivity extends Activity {
 		    // TODO: remove self test when stable
 		    Toast.makeText(getApplicationContext(), "Load Script:"+url, Toast.LENGTH_LONG).show();
 			String scriptUrl = config.getParam(Config.CURRENT_SCRIPT_URL, Config.NONE);
-			buttonRunScript.setEnabled(!(Config.NONE == scriptUrl));
+			Boolean gotIt = (Config.NONE != scriptUrl);
+			buttonRunScript.setEnabled(gotIt);
+			buttonRunScript.setEnabled(true);
+
 		    
 		    assert(text.trim().equals(data.trim()));		    
 		    config.setScriptText(text);
