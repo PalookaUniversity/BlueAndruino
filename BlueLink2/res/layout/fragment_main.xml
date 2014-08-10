@@ -32,9 +32,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="onClickLoadScript"
-            android:text="Load"
+            android:text="Get"
             android:textSize="20sp" />
-        
+
         <Button
             android:id="@+id/btn_run_script"
             android:layout_width="wrap_content"
@@ -42,12 +42,19 @@
             android:onClick="onClickRunScript"
             android:text="Run"
             android:textSize="20sp" />
+        
+        <Button
+            android:id="@+id/btn_edit_script"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onClickEditScript"
+            android:text="Edit"
+            android:textSize="20sp" />
 
-
-     <Spinner
-        android:id="@+id/ScriptListSpinner"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+        <Spinner
+            android:id="@+id/ScriptListSpinner"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
     <LinearLayout

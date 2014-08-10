@@ -302,6 +302,13 @@ public class ExecActivity extends Activity {
       scriptLoader.fetch(scriptUrl);
       }
     
+    public void onClickEditScript(View v) {
+		
+    	Intent configIntent = new Intent(ExecActivity.this,ScriptViewActivity.class);
+    	startActivity(configIntent);
+
+    }
+    
     public void onClickRunScript(View v) {
       String scriptText = Config.getInstance().getScriptText();
       if (scriptText.equals("")){
@@ -474,10 +481,7 @@ public class ExecActivity extends Activity {
 			this.url = url;
 			String[] parts = url.split("/");
 			scriptName = parts[parts.length - 1];
-			httpAgent.fetch(url,this,"loading script " + url);
-						
-			String scriptUrl = config.getParam(Config.CURRENT_SCRIPT_URL, Config.NONE);
-			buttonRunScript.setEnabled(!(Config.NONE == scriptUrl));			
+			httpAgent.fetch(url,this,"loading script " + url);						
 		}
 
 		@Override
@@ -487,6 +491,9 @@ public class ExecActivity extends Activity {
 		    String data = Util.getInstance().getTextFile(scriptName, Config.SCRIPT_DIRPATH);
 		    // TODO: remove self test when stable
 		    Toast.makeText(getApplicationContext(), "Load Script:"+url, Toast.LENGTH_LONG).show();
+			String scriptUrl = config.getParam(Config.CURRENT_SCRIPT_URL, Config.NONE);
+			buttonRunScript.setEnabled(!(Config.NONE == scriptUrl));
+		    
 		    assert(text.trim().equals(data.trim()));		    
 		    config.setScriptText(text);
 		}

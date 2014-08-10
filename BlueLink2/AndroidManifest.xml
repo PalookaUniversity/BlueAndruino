@@ -7,19 +7,18 @@
     <uses-sdk
         android:minSdkVersion="18"
         android:targetSdkVersion="19" />
-    
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.INTERNET" />
 
-    
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.palookaville.bluelink.ExecActivity"
+            android:name=".ExecActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,8 +27,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.palookaville.bluelink.ConfigActivity"
+            android:name=".ConfigActivity"
             android:label="Debug" >
+        </activity>
+        <activity
+            android:name=".ScriptViewActivity"
+            android:label="@string/title_activity_script_view" >
         </activity>
     </application>
 
