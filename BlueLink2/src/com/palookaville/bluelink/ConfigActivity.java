@@ -1,5 +1,6 @@
 package com.palookaville.bluelink;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
@@ -135,6 +137,17 @@ public class ConfigActivity extends Activity {
 		Toast.makeText(getApplicationContext(), "load scripts", Toast.LENGTH_LONG).show();
 	}
 	
+	// XXX
+	public void probePressed(View view){
+		String result = "Probe pressed=";
+		System.out.println(result);
+		List<String> scripts = Config.getInstance().externalScriptList();
+		String scriptName = scripts.get(0);
+		String text = Config.getInstance().scriptText(scriptName);
+		System.out.println(text);		
+		Toast.makeText(getApplicationContext(), result + text, Toast.LENGTH_LONG).show();
+	}
+	
 
 	public void dbg3Pressed(View view){
 		String result = "DBG3 pressed: init BT";
@@ -146,6 +159,7 @@ public class ConfigActivity extends Activity {
 		//Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
 		//debugText.setText(result);
 	}
+	
 	
 	public void selectScriptPressed(View view){
 		String scriptUrl = (String)scriptListSpinner.getSelectedItem();	

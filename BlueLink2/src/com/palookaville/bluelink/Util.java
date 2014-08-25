@@ -60,14 +60,19 @@ public class Util {
     }
     
     void guaranteeEmptyDirectory(String s){
-    	File dir = new File(fullPath(s)); 
-    	if (!dir.exists()){
-    		dir.mkdirs();
-    	}
+    	File dir = guaranteeDirectory(fullPath(s));
     	for (File f : dir.listFiles()){
     		f.delete();
     	}
     	return;
+    }
+    
+    File guaranteeDirectory(String s){
+    	File dir = new File(s); 
+    	if (!dir.exists()){
+    		dir.mkdirs();
+    	}
+    	return dir;
     }
     
     void guaranteeTextFile(String name, String path, String value){
@@ -88,7 +93,7 @@ public class Util {
     
     String getTextFile(String name, String path){
     	String result = "";
-    	File file = new File(fullPath(path) + File.separator + name);
+    	File file = new File(path + File.separator + name);
     	StringBuilder sb = new StringBuilder();
     	try {
 			BufferedReader br = new BufferedReader(new FileReader(file));

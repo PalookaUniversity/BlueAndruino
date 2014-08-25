@@ -68,7 +68,7 @@
         android:onClick="fetchBillboard"
         android:title="Fetch Billboard" />
         
-            <Button
+     <Button
         android:id="@+id/loadScript"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -76,6 +76,15 @@
         android:text="Load Script"
         android:onClick="loadScriptPressed"
         android:title="Load Script" />
+            
+      <Button
+        android:id="@+id/probe"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Probe"
+        android:onClick="probePressed"
+        android:title="Probe" />
 
     <Button
         android:id="@+id/debug3"
