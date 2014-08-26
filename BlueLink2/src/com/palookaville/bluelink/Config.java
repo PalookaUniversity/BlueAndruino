@@ -58,6 +58,7 @@ class Config {
 		btLink = new BTLink();
 		String extPath = Environment.getExternalStorageDirectory().getAbsolutePath();
 		externalScriptPath = extPath + File.separator + SCRIPT_DIRPATH;
+		scriptList = externalScriptList();
 	};
 	
 	public void init(Context context){

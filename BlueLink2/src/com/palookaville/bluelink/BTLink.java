@@ -78,7 +78,7 @@ public class BTLink  {
 		return socket;
 	}
 	
-	public void activate(ExecActivity activity){
+	public void activate(ExecActivity activity, Callback callback){
 		this.activity = activity;
 		try {
 			if (socket != null) {
@@ -95,6 +95,7 @@ public class BTLink  {
 		writer.start();
 		reader.start();
 		activated = true;
+		callback.ok("activated");
 		System.out.println("Reader and writer started.");
 	}
 
@@ -176,12 +177,12 @@ public class BTLink  {
     	return btDevice;
     }
 	
-	void pair(Activity ac){
+	void pair(Activity ac, Callback callback){
         final ArrayList<BluetoothDevice> deviceList = getBluetoothDevices();
         if (deviceList == null) {
         	Toast.makeText(ac.getApplicationContext(), "No device list", Toast.LENGTH_LONG).show();
         } else {
-        	showChooserAndConnect(ac, deviceList);	
+        	showChooserAndConnect(ac, deviceList, callback);	
         }
 	}
 	
@@ -189,7 +190,7 @@ public class BTLink  {
 	 * 
 	 * @param deviceList
 	 */	
-    void showChooserAndConnect(final Activity ac, final ArrayList<BluetoothDevice> deviceList) {
+    void showChooserAndConnect(final Activity ac, final ArrayList<BluetoothDevice> deviceList, final Callback callback) {
         ArrayList<CharSequence> itemList = new ArrayList<CharSequence>();
         for (BluetoothDevice device : deviceList) {
             itemList.add(device.getName() + " [" + device.getAddress() + "]");
@@ -215,8 +216,11 @@ public class BTLink  {
             @Override
             public void onDismiss(DialogInterface dialog) {
                 if (getToConnect() != null) {
+                	callback.ok("Connected");
                 	Toast.makeText(ac.getApplicationContext(), "Connected", Toast.LENGTH_LONG).show();
                     //connect();
+                } else {
+                	callback.fail("No connection");
                 }
             }
         });
