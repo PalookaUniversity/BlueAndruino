@@ -154,12 +154,8 @@ public class ExecActivity extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
     	View v = getWindow().getDecorView().getRootView();
     	Context ac = getApplicationContext();
-//    	View view = (View)ac;
         switch(item.getItemId()){
         case R.id.action_status: 
 //        	Toast.makeText(getApplicationContext(), "onStatusClick()", Toast.LENGTH_SHORT).show();
@@ -314,7 +310,10 @@ public class ExecActivity extends Activity {
     }
     
     public void onClickRunScript(View v) {
-      String scriptText = Config.getInstance().getScriptText();
+
+      scriptUrl = (String) scriptListSpinner.getSelectedItem();
+      String scriptText = Util.getInstance().getTextFile(scriptUrl, Config.getInstance().getExternalScriptPath());
+
       if (scriptText.equals("")){
     	  textOutputView.append("\nScript text empty");
     	  return;

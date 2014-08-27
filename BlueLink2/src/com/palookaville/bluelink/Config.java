@@ -49,6 +49,8 @@ class Config {
 	String scriptPath = "";	
 	String scriptText = "";	
 	String externalScriptPath = "";
+	public String getExternalScriptPath() { return externalScriptPath; }
+
 	List<String>scriptList = new ArrayList<String>();
 	public String getScriptText() { return scriptText; }
 	void setScriptText(String s){ scriptText = s; }

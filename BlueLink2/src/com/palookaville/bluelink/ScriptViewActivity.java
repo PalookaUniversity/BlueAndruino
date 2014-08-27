@@ -60,9 +60,8 @@ public class ScriptViewActivity extends Activity {
 	
 	private void init(){
 		Bundle extras = getIntent().getExtras();
-		scriptUrl = extras.getString(SCRIPT_URL);
-		scriptName = Config.getInstance().scriptName(scriptUrl);
-		scriptText = Config.getInstance().getScriptText();
+		scriptName = extras.getString(SCRIPT_URL);
+		scriptText = Util.getInstance().getTextFile(scriptName, Config.getInstance().getExternalScriptPath());
 		scriptView = (EditText)findViewById(R.id.textview_scriptview);
 		scriptView.setText(scriptText);				
 	}
