@@ -282,19 +282,6 @@ public class ExecActivity extends Activity {
 		//textOutputView.setText("Check:"+diagnostic);
     }
     
-    public void onClickLoadScript(View v) {
-    	
-      scriptUrl = (String) scriptListSpinner.getSelectedItem();
-      
-      if (scriptUrl == null || scriptUrl.equals("")){
-    	  Toast.makeText(getApplicationContext(), "Error: No script selected", Toast.LENGTH_LONG).show();
-    	  return;
-      }
-//      ScriptLoader scriptLoader = new ScriptLoader(this);
-//      scriptLoader.fetch(scriptUrl);
-        Config.getInstance().scriptText(scriptUrl);
-      }
-    
     public void onClickEditScript(View v) {
     	
         scriptUrl = (String) scriptListSpinner.getSelectedItem();

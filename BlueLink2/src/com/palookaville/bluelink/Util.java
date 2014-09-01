@@ -1,6 +1,7 @@
 package com.palookaville.bluelink;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -107,5 +108,23 @@ public class Util {
 			throw new RuntimeException(e);
 		}    	
     	return result;
+    }
+    
+    void saveTextFile(String name, String path, String text){
+    	
+    	File file = new File(path + File.separator + name);    	
+        BufferedWriter writer = null;
+        try {
+            writer = new BufferedWriter(new FileWriter(file));
+            writer.write(text);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                writer.close();
+            } catch (Exception e) {
+            }
+        }   	
     }
 }

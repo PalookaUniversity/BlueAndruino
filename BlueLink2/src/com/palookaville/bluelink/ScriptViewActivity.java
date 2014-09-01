@@ -38,6 +38,8 @@ public class ScriptViewActivity extends Activity {
 		getMenuInflater().inflate(R.menu.script_view, menu);
 		return true;
 	}
+	
+	Intent configIntent = null;
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -45,7 +47,28 @@ public class ScriptViewActivity extends Activity {
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
+		if (id == R.id.action_edit_save) {
+			scriptText = scriptView.getText().toString();
+			Util.getInstance().saveTextFile(scriptName, Config.getInstance().getExternalScriptPath(),scriptText);
+			Toast.makeText(getApplicationContext(), "Save Edits", Toast.LENGTH_LONG).show();			
+			return true;
+		}
+		if (id == R.id.action_edit_exit) {
+			scriptText = scriptView.getText().toString();
+			Util.getInstance().saveTextFile(scriptName, Config.getInstance().getExternalScriptPath(),scriptText);
+			Toast.makeText(getApplicationContext(), "Exit", Toast.LENGTH_LONG).show();
+			if (configIntent == null){
+				configIntent = new Intent(ScriptViewActivity.this,ExecActivity.class);
+			}
+	    	startActivity(configIntent);
+			return true;
+		}
+		if (id == R.id.action_edit_abort) {
+			Toast.makeText(getApplicationContext(), "Abort", Toast.LENGTH_LONG).show();
+			if (configIntent == null){
+				configIntent = new Intent(ScriptViewActivity.this,ExecActivity.class);
+			}
+	    	startActivity(configIntent);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
